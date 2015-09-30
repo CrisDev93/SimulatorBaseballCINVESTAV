@@ -2,12 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package simulador;
+package View;
 
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import tabla.Window;
 /**
  *
  * @author Cristian
@@ -251,8 +250,8 @@ public class ControlPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_numbandsActionPerformed
 
     private void gotosimulateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gotosimulateActionPerformed
-        Window window = new Window();
-       window.setVisible(true);
+   //     Window window = new Window();
+    //   window.setVisible(true);
       //  System.out.println("hello world");
         
         c.setVisible(true);

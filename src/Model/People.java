@@ -1,10 +1,15 @@
-package simulador;
+package Model;
 
+import Controller.MonitorGeneral;
+import View.ControlPanel;
+import Controller.BallControl;
+import Model.Agents;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
+import Controller.Rules;
 
 /**
  *
@@ -20,9 +25,8 @@ public class People extends Agents {
     Thread thread;
     String srcImg;
 
-  MonitorBands mb = new MonitorBands();
   ControlPanel cp;
-  MonitorGeneral monitorg;
+  public MonitorGeneral monitorg;
   public Agents Aball;
   
     public People(String classimage,  int posx, int posy,ControlPanel c) throws IOException {
@@ -31,7 +35,7 @@ public class People extends Agents {
         int hm = 100;
         monitorg = new MonitorGeneral(18);
        
-                 Aball = new Agents("img/Mguy"+1+".png", 0,0 ,monitorg,mb,"People"
+                 Aball = new Agents("img/Mguy"+1+".png", 0,0 ,monitorg,"People"
                 + ""+11111," ",1,cp);
                  Aball.rol="Ball";
                  Aball.permitActivity = true;
@@ -41,7 +45,7 @@ public class People extends Agents {
                    this.addAgent(Aball);
                   iAgents.add(Aball);
                    
-                   Agents tmp = new Agents("img/Mguy"+1+".png", 0,0 ,monitorg,mb,"People"
+                   Agents tmp = new Agents("img/Mguy"+1+".png", 0,0 ,monitorg,"People"
                 + ""+11111," ",1,cp);
                    tmp.rol = "controler";
                    tmp.initialPosition(0);
@@ -72,7 +76,7 @@ System.out.println("Dato: "+playersnumber);
         for (int playercurrent = 0; playercurrent < playersnumber ; playercurrent++) {
          
                  Agents newagent = null;
-                newagent = new Agents("img/Mguy"+1+".png", 100,220 ,monitorg,mb,"People"
+                newagent = new Agents("img/Mguy"+1+".png", 100,220 ,monitorg,"People"
                 + ""+playercurrent," ",1,cp);
                 newagent.ballAgent = Aball;
                 newagent.rules = new Rules();

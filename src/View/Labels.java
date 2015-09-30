@@ -1,4 +1,4 @@
-package simulador;
+package View;
 
 import java.awt.Color;
 import java.awt.Font;

@@ -1,5 +1,7 @@
-package simulador;
+package View;
 
+import View.ControlPanel;
+import Model.Agents;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,14 +27,16 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
+import View.Labels;
+import Model.People;
+import View.Player1;
+
 public class Drawn extends JPanel implements ActionListener {
 
-    private Player1 Player_1;
+    private Player1 Player_1;  
     public static Labels stamp;
     public People hatchery;
     private Timer timer;
-    public static Clock clock;
-    public BackgroundImages escenery;
 
     private Agents getIndicator;
     ImageIcon fondo;
@@ -46,21 +50,18 @@ public class Drawn extends JPanel implements ActionListener {
      * @param stage identifier to choose a stage
      */
     public Drawn(String nombre) throws IOException {
-        this.pantalla = nombre;
+        System.out.println("PANTALLA "+nombre);
+        this.pantalla = "baseballmap.png";
         setFocusable(true);
       //  this.cp = cpr;
         System.out.println("here: "+cp);
         stamp = new Labels(this);
         hatchery = new People("img/1grupo.jpg", 100, 150,cp);
         timer = new Timer(10, this);
-        clock = new Clock();
         hatchery.setBehavior();
         addKeyListener(new teclado());
-        Player_1 = new Player1("img/2grupos.png", 150, 529, 339);
-        escenery = new BackgroundImages();
+      //  Player_1 = new Player1("img/2grupo.png", 150, 529, 339);
         timer.start();
-                Thread t1 = new Thread(clock);
-        t1.start();
         
         
     }
@@ -76,7 +77,7 @@ public class Drawn extends JPanel implements ActionListener {
 
         setOpaque(false);
        // escenery.Imagepaint(g2);
-        g2.drawImage(Player_1.getImage(), Player_1.getX(), Player_1.getY(), null);
+    //    g2.drawImage(Player_1.getImage(), Player_1.getX(), Player_1.getY(), null);
         
         
         

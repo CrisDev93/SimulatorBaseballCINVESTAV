@@ -1,4 +1,4 @@
-package simulador;
+package View;
 
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;

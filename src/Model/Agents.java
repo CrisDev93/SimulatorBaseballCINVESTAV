@@ -1,4 +1,4 @@
-package simulador;
+package Model;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -19,6 +19,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import Controller.BallControl;
+import View.ControlPanel;
+import Controller.MonitorGeneral;
+import Controller.Movements;
+import Controller.Rules;
+import Controller.RulesReader;
 
 /**
  *
@@ -32,10 +38,9 @@ public class Agents implements Runnable {
     private Image image;
     String filename = "img/rguy3";
     public ArrayList travel;
-    MonitorGeneral m;
-    MonitorBands mb;
+    public MonitorGeneral m;
     public String name,rol,band,move="";
-    Random r = new Random();
+   public  Random r = new Random();
     LinkedList<Agents> e = new LinkedList<Agents>();
     ArrayList iAgents = new ArrayList();
 
@@ -53,7 +58,7 @@ public class Agents implements Runnable {
  //PITCHER = {523,475};
     public static RulesReader rr = new RulesReader();
     public Movements movements = new Movements();
-    int speed = 0;
+   public int speed = 0;
     public Agents() {   
 
     }
@@ -73,7 +78,7 @@ public class Agents implements Runnable {
      *
      */
     //MonitorGeneral m;
-    public Agents(String classimage, int posx, int posy, MonitorGeneral mon, MonitorBands mb, String name, String band, int type,ControlPanel cp) {
+    public Agents(String classimage, int posx, int posy, MonitorGeneral mon, String name, String band, int type,ControlPanel cp) {
         try{
         inconcert = 0;
         alive = true;
@@ -82,12 +87,12 @@ public class Agents implements Runnable {
         pause = false;
         this.name = name;
         
-        ImageIcon imgIcon = new ImageIcon(this.getClass().getResource(classimage));
-        image = imgIcon.getImage();
+       // ImageIcon imgIcon = new ImageIcon(this.getClass().getResource(classimage));
+        //image = imgIcon.getImage();
         this.m = mon;
         travel = new ArrayList();
         this.type = type;
-        this.mb = mb;
+     //   this.mb = mb;
         this.band = band;
         this.cp = cp;
          ball = ImageIO.read(new File("src/simulador/img/ball.png"));
@@ -264,7 +269,7 @@ for (int i = 0; i < rows; i++)
             m.addAgents(this);
         }
         if (this.type == 2) {
-            mb.addBands(this);
+      //      mb.addBands(this);
         }
     //    System.out.println("The people: " + this.name + " has left the concert");
 

@@ -2,12 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package simulador;
+package Controller;
 
+import Model.Agents;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.concurrent.Semaphore;
-
+import Model.Concert;
+import Model.Activity;
 /**
  *
  * @author Cristian
@@ -23,13 +25,13 @@ public class MonitorGeneral {
  
     private boolean flagenter = false;
     int c = 0;
-    StackAgentsWait verify;
+   // StackAgentsWait verify;
     Semaphore semaphore;
-    BathroomMonitor bm;
-    DrinksMonitor dm;
-    MerchMonitor mm;
+   // BathroomMonitor bm;
+   // DrinksMonitor dm;
+   // MerchMonitor mm;
     Concert concert;
-    int waitingagents=0; 
+   public  int waitingagents=0; 
     public boolean flagconcert = true;
     public MonitorGeneral() {
     }
@@ -40,13 +42,13 @@ public class MonitorGeneral {
     public MonitorGeneral(int sizebuffer) {
         bufferagents = new Agents[sizebuffer];
         //   System.out.println("Aquí wey: "+bufferagents);
-        verify = new StackAgentsWait(this);
+       // verify = new StackAgentsWait(this);
        
 //        cp.setVisible(true);
         NULLSField();
-        bm = new BathroomMonitor(90);
-        dm = new DrinksMonitor(100);
-        mm = new MerchMonitor(100);
+       // bm = new BathroomMonitor(90);
+       // dm = new DrinksMonitor(100);
+       // mm = new MerchMonitor(100);
         concert = new Concert();
         semaphore = new Semaphore(sizebuffer);
     }
@@ -83,7 +85,7 @@ public class MonitorGeneral {
                   //  System.out.println("La persona: " + a.name + "ha entrado al concierto");
                     Activity activity = new Activity();
                     
-                    activity.selectingActivity(bufferagents[i],bm,dm,mm,concert);
+                    activity.selectingActivity(bufferagents[i],concert);
                     bufferagents[i] = null;
                     inter--; 
                     semaphore.release();

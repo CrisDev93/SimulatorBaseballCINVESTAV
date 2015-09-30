@@ -1,6 +1,8 @@
-package simulador;
+package View;
 
 
+import View.Drawn;
+import View.ControlPanel;
 import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;

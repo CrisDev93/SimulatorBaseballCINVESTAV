@@ -2,13 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package simulador;
+package Model;
 
 import java.util.Random;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import Controller.MonitorGeneral;
 /**
  *
  * @author Cristian
@@ -20,9 +20,9 @@ public class Activity extends MonitorGeneral {
     int waitingcamerino = 0;
     Random random = new Random();
     int v = 0;
-    BathroomMonitor bm;
-    DrinksMonitor dm;
-    MerchMonitor mm;
+   // BathroomMonitor bm;
+   // DrinksMonitor dm;
+   // MerchMonitor mm;
     int numband = 0;
     int numart = 0;
     Integer ntotal   = 0;
@@ -32,10 +32,10 @@ public class Activity extends MonitorGeneral {
     static boolean local = true;
     /*In this method it select a random number, this random number is for select an activity to do*/
 
-    public void selectingActivity(Agents a, BathroomMonitor b, DrinksMonitor dm, MerchMonitor mm, Concert concert) {
-        this.bm = b;
-        this.dm = dm;
-        this.mm = mm;
+    public void selectingActivity(Agents a, Concert concert) {
+      //  this.bm = b;
+   //     this.dm = dm;
+    //    this.mm = mm;
         this.concert = concert;
         
         try {
@@ -58,17 +58,17 @@ public class Activity extends MonitorGeneral {
 
                             break;
                         case 2: {
-                            bm.enterBathroom(a, 3);
+                  //          bm.enterBathroom(a, 3);
 
                         }
                         ;
 
                         break;
                         case 3:
-                            dm.enterDrinksArea(a, 1);
+                    //        dm.enterDrinksArea(a, 1);
                             break;
                         case 4:
-                            mm.enterMerchArea(a, 2);
+                      //      mm.enterMerchArea(a, 2);
                             break;
 
                     }
