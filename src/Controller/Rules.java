@@ -20,11 +20,12 @@ import java.util.Stack;
 public class Rules {
     public static String ruleGlobal;
     
-    public Rules() throws IOException{
+    public Rules() throws IOException{ 
         ruleGlobal = getText("0.dat");
         makeRules();
         filterRules();
     }
+    
     public Stack<String> rules= new Stack<String>();
     public static Stack<Rule> rulesFilter= new Stack<Rule>();
     
@@ -41,6 +42,7 @@ public class Rules {
     
     return cadena;
     }
+    /*makeRules es un método que se encarga de */
     public void makeRules() throws IOException{
    // String stringfile = getText("0.dat");
          String tmprule= "";
@@ -53,6 +55,9 @@ public class Rules {
    // rules.add("Batter|Catcher|1|0|");
     
     }
+    /*filterRules es un método que se encarga de filtrar texto y crear objetos de tipo Rule el cual contiene información 
+    relacionado a la instrucción actual, clasificando así en atributos como el número de jugador, la base y el tipo de acción
+    a realizar*/
      public void filterRules()
      {
      Object [] info = {null,null,null};
@@ -76,10 +81,10 @@ p+=part[1].charAt(j);
 rulesFilter.add(new Rule(p,part[0],Integer.parseInt(b)));
      }
      }
-    public String getRule()
+    public Rule getRule()
     {
-    if(rules.isEmpty()) return "";
-    else return rules.pop();
+    if(rulesFilter.isEmpty()) return null;
+    else return rulesFilter.pop();
     
     }
 } 

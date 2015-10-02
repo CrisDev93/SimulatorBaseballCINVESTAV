@@ -6,6 +6,7 @@
 package Controller;
 
 import Model.Agents;
+import Model.Rule;
 import java.io.File;
 import java.util.Stack;
 
@@ -21,8 +22,8 @@ public class RulesReader extends Agents{
     public void reader(Agents a)
     {
         
-        String rulel = a.rules.getRule();
-    if(a.nextStack)a.rulecurrent = a.rules.getRule();
+        Rule rulel = a.rules.getRule();
+  //  if(a.nextStack)a.rulecurrent = a.rules.getRule();
       if(rulel.equals("") == false){
           System.out.println("CURRENT : "+a.rulecurrent);
       

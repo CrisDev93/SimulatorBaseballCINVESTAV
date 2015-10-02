@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import Controller.BallControl;
+import Controller.Escenarios;
 import View.ControlPanel;
 import Controller.MonitorGeneral;
 import Controller.Movements;
@@ -59,6 +60,7 @@ public class Agents implements Runnable {
     public static RulesReader rr = new RulesReader();
     public Movements movements = new Movements();
    public int speed = 0;
+   public static Escenarios escenarios = new Escenarios();
     public Agents() {   
 
     }
@@ -298,7 +300,7 @@ for (int i = 0; i < rows; i++)
     public Agents getAgent(String rol){
        
     for(Agents ag: players){
-    
+  //  System.out.println(players);
     if(ag.rol.equals(rol)) return ag;
     }
     return null;
@@ -374,45 +376,26 @@ tmp = tmp + ru.charAt(i);
  return rul;
  }
 public void moveAgents(int destinationl,int cont) throws InterruptedException {
-    if(!(this.rol.equals("wait") || this.rol.equals("Ball") || this.rol.equals("controler"))){
-    int opc = 0;
-    if(opc == 1) movements.toFirstBase(this);
-    if(opc == 2) movements.toSecondBase(this);
-    if(opc == 3) movements.toThirdBase(this);
-    if(opc == 4) movements.toHome(this);
-    if(opc == 5) movements.toBall(this);
     
-    Agents bt = this.getAgent("Ball");
-   // System.out.println("BALL OBJECT: "+bt);
-    
-    }
     if(this.rol.equals("controler"))
     {
-        System.out.println(this.rules.rulesFilter.get(0).player);
+        Rule nr = this.rules.getRule();
+        if(nr != null)
+        {
+        if(nr.escenario.equals("b"))
+        {
+         synchronized(escenarios)
+         {
+        escenarios.ball(this);
+                System.out.println(this.rol);
+
+         }
+        }
+        }
     }
-        Agents bt = this.getAgent("Ball");
-     //this.getAgent("controller").flag = true;
-     if(this.rol.equals("controler"))
-      {
-      bt.speed = 20;
-      System.out.println(" ROL : " + this.rol);
-     this.movements.ball(bt);
-     this.movements.trhowBall(bt,BATTER,10);
-     this.movements.trhowBall(bt,PITCHER,0);
-     Agents ba = movements.getBestAgent(bt);
-     ba.speed = 30;
-     ba.move ="down";
-     this.movements.toBall(ba);
-     this.movements.trhowBall(bt,FIRSTBASEMAN,0);
      
-      }
     
-    if(this.rol.equals("Batter") && this.flag)
-    {
-    this.speed = 140; 
-    this.movements.toFirstBase(this);
-    this.flag = false;
-    }
+    
     
     }
  public void multiplePaths(int current, int destiny,int cont) throws InterruptedException {
