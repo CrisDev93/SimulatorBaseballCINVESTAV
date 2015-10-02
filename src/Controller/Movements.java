@@ -34,7 +34,7 @@ public class Movements {
      if(a.x == xl && a.y == yl){ a.flagmove = false;System.out.println("DONE"); break;}
   
     else {
-       System.out.println("Homing");
+     //  System.out.println("Homing");
       if(!(a.rol.equals("Ball")|| a.rol.equals("controler")))  
       {
       a.flagmove= true;
@@ -330,12 +330,12 @@ public class Movements {
     }
  
  
- public void toPitcherGo(Agents a)
+ public void toPitcherGo(Agents a,int xm,int ym)
     {
     boolean sumarx=false;
     boolean sumary=false;
     int xl,yl;
-    if(a.rol.equals("Ball")){ xl = 523; yl = 475 - 30;}
+    if(a.rol.equals("Ball")){ xl = xm; yl = ym;}
     else {
     xl = a.BATTER[0];
     yl = a.BATTER[1];
@@ -350,7 +350,7 @@ public class Movements {
      if(a.x == xl && a.y == yl){ a.flagmove = false;System.out.println("DONE"); break;}
   
     else {
-       System.out.println("Homing");
+   //    System.out.println("Homing");
       if(!(a.rol.equals("Ball")|| a.rol.equals("controler")))  
       {
       a.flagmove= true;
@@ -382,16 +382,17 @@ public class Movements {
  
  
  
- public void trhowBall(Agents ball,int [] coords,int opc)
+ public void trhowBall(Agents ball,int [] coords,int opc,int [] something)
  {
  if(opc == 10) ball.initialPosition(1);
+// if(opc == 11 ){ Agents btt = ball.getAgent("Batter"); btt.flag = true; btt.speed = 30;toFirstBase(btt);} 
+
  if(coords == ball.FIRSTBASEMAN) toFirstBase(ball);
  if(coords == ball.SECONDBASEMAN) toSecondBase(ball);
  if(coords == ball.THIRDBASEMAN) toThirdBase(ball);
- if(coords == ball.PITCHER) toPitcherGo(ball);
+ if(coords == ball.PITCHER) toPitcherGo(ball,something[0],something[1]);
  if(coords == ball.BATTER) toHome(ball);
  if(opc == 10 ) {ball.getAgent("Batter").flag = true; toHome(ball);}
- if(opc == 11 ){ ball.getAgent("Batter").flag = true;  toHome(ball);} 
  
  }
  

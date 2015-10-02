@@ -300,7 +300,7 @@ for (int i = 0; i < rows; i++)
     public Agents getAgent(String rol){
        
     for(Agents ag: players){
-  //  System.out.println(players);
+    
     if(ag.rol.equals(rol)) return ag;
     }
     return null;
@@ -375,23 +375,69 @@ tmp = tmp + ru.charAt(i);
      
  return rul;
  }
+ public void singnals()
+ {
+ if(this.destination == 1)
+ {
+   flag = true; 
+   speed = 30;
+   this.movements.toFirstBase(this);
+   destination = 0;
+ }
+ if(this.destination == 2)
+ {
+   flag = true; 
+   speed = 30;
+   this.movements.toSecondBase(this);
+   destination = 0;
+ }
+ if(this.destination == 3)
+ {
+   flag = true; 
+   speed = 30;
+   this.movements.toThirdBase(this);
+   destination = 0;
+ }
+ if(this.destination == 4)
+ {
+   flag = true; 
+   speed = 30;
+   this.movements.toHome(this);
+   destination = 0;
+ }
+ 
+ 
+ }
 public void moveAgents(int destinationl,int cont) throws InterruptedException {
     
     if(this.rol.equals("controler"))
     {
+        
         Rule nr = this.rules.getRule();
+        System.out.println("REGLA ACTUAL : "+nr.escenario);
         if(nr != null)
         {
         if(nr.escenario.equals("b"))
-        {
-         synchronized(escenarios)
-         {
-        escenarios.ball(this);
-                System.out.println(this.rol);
+        { 
+        escenarios.bola(this);
+         System.out.println(this.rol);
 
-         }
+            
         }
+        if(nr.escenario.equals("co"))
+        {
+        if( this.rules.nextRule().escenario.equals("o") )
+        {
+        this.getAgent("Batter").speed = (int) this.getAgent("Ball").speed / 2;
+        System.out.println(this.getAgent("Batter").speed);
         }
+        escenarios.contactoPelota(this);
+        }
+        
+        
+        
+        }
+    
     }
      
     
@@ -402,6 +448,7 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
         switch (current) {
            
             case 4: {
+                this.singnals();
                 this.moveAgents(destiny,cont);
                 break;
             }

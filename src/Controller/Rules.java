@@ -61,9 +61,10 @@ public class Rules {
      public void filterRules()
      {
      Object [] info = {null,null,null};
-     for(String s: rules)
+     int sizestack = rules.size();
+     for(int i = 0 ;i<sizestack;i++)
      {
-   String str = s;
+   String str = rules.pop();
 String[] part = str.split("(?<=\\D)(?=\\d)");
 String p="",b=""; 
 /* Iterate the string of numbers for separate the player and the base , afther that I create an object Rule and parse the datas*/
@@ -78,7 +79,7 @@ else
 p+=part[1].charAt(j);
 }
 }
-rulesFilter.add(new Rule(p,part[0],Integer.parseInt(b)));
+rulesFilter.push(new Rule(p,part[0],Integer.parseInt(b)));
      }
      }
     public Rule getRule()
@@ -87,4 +88,10 @@ rulesFilter.add(new Rule(p,part[0],Integer.parseInt(b)));
     else return rulesFilter.pop();
     
     }
+    public Rule nextRule()
+    {
+     if(rulesFilter.isEmpty()) return null;
+     else return rulesFilter.peek();
+         
+         }
 } 
