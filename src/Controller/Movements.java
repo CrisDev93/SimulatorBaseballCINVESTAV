@@ -397,6 +397,11 @@ public class Movements {
  }
  
  
+ public int [] getNextBaseClose()
+ {
  
+ 
+ return null;
+ }
  
 }

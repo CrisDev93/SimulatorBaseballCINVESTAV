@@ -16,25 +16,33 @@ import static Model.Agents.PITCHER;
  */
 public class Escenarios extends Movements{
     
+    /**
+    @param a  variable Agents that represent the controler agents and it's for get and Access to the methods of Agents class
+    */
     public void contactoPelota(Agents a)
     {
-     
+    //Some instances of Agents class for get an especific agents access
     Agents pitcher,batter,balon;
-    
+    // A boolean variable for generate a randomly movement for the ball for example if rDestinations is true the movement in 'X' will be more long. 
+    boolean rDestionation;
+    // Variables of X and Y coords randomly. 
+    int rx,ry;
     pitcher = a.getAgent("Pitcher");
-    
     batter  = a.getAgent("Batter");
     balon    = a.getAgent("Ball");
     
-    trhowBall(balon,BATTER,10,null);
-     batter.destination = 1;
-     int ry = a.r.nextInt(60 - 30 ) + 30;
-     int rx = a.r.nextInt(40 - 10 )+ 10;
-     boolean sor = a.r.nextBoolean();
+     trhowBall(balon,BATTER,10,null);
      
-     System.out.println(sor);
+     batter.destination = 1;
+     
+     ry = a.r.nextInt(60 - 30 ) + 30;
+     rx = a.r.nextInt(40 - 10 )+ 10;
+     
+     rDestionation = a.r.nextBoolean();
+     
+     System.out.println(rDestionation);
      int [] nco;
-     if (sor)
+     if (rDestionation)
      {
      int [] ncot = {PITCHER[0]  + rx,(PITCHER[1] - ry)};
      nco = ncot;
@@ -46,7 +54,6 @@ public class Escenarios extends Movements{
      
      trhowBall(balon,PITCHER,11,nco);
      
-    //batter.movements.toFirstBase(batter);
      Agents ba = getBestAgent(balon);
      ba.speed = batter.speed * 2;
      ba.move ="down";

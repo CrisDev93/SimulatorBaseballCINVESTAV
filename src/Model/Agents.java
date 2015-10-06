@@ -32,35 +32,36 @@ import Controller.RulesReader;
  * @author Edy
  */
 public class Agents implements Runnable {
-       public static ArrayList<Agents> players = new ArrayList<Agents>();
+    
 
-    public  int leftconcert =0,inconcert,ALocation,dx,dy,x,y,type=0,team,pointer=0,destination=0;
-    public boolean pause,flag = false,alive,permitActivity,flagmove = false,turn = false,evento = false,nextStack=true,inMovement = false,ballflag = false;
+    // Primitivos 
+    public  int leftconcert =0,inconcert,ALocation,dx,dy,x,y,type=0,team,pointer=0,destination=0,speed = 0,xTemp,yTemp;
+    public boolean pause,flag = false,alive,permitActivity,flagmove = false,turn = false,evento = false,nextStack=true,inMovement = false,ballflag = false,goal=false;
+    public static int[] PITCHER = {523,475},CATCHER={515,545},BATTER={515,525},FIRSTBASEMAN={640,460},SECONDBASEMAN={527,400},
+            THIRDBASEMAN={403,465},SHORTSTOP,LEFTFIELDER={351,334},CENTERFIELDER={515,313},RIGHTFIELDER={687,323};
+    
+    //Objetos
+    public static ArrayList<Agents> players = new ArrayList<Agents>();
     private Image image;
     String filename = "img/rguy3";
     public ArrayList travel;
     public MonitorGeneral m;
     public String name,rol,band,move="";
-   public  Random r = new Random();
-    LinkedList<Agents> e = new LinkedList<Agents>();
-    ArrayList iAgents = new ArrayList();
-
-    ControlPanel cp;
+    public  Random r;
+    public LinkedList<Agents> e = new LinkedList<Agents>();
+    public ArrayList iAgents = new ArrayList();
     static String [] rols = {"Batter","Pitcher","Catcher","First Baseman","Second Baseman","Third Baseman","Short Stop","Left Fielder","Center Fielder","Right Fielder"};
+    public static String rulecurrent="";
     BufferedImage img,bigImg; 
     BufferedImage[] sprites;
     Image ball;
     public BallControl bControl;
     public static Agents ballAgent;
     public static Rules rules;
-    public static String rulecurrent="";
-    public static int[] PITCHER = {523,475},CATCHER={515,545},BATTER={515,525},FIRSTBASEMAN={640,460},SECONDBASEMAN={527,400},
-            THIRDBASEMAN={403,465},SHORTSTOP,LEFTFIELDER={351,334},CENTERFIELDER={515,313},RIGHTFIELDER={687,323};
- //PITCHER = {523,475};
     public static RulesReader rr = new RulesReader();
     public Movements movements = new Movements();
-   public int speed = 0;
-   public static Escenarios escenarios = new Escenarios();
+    public static Escenarios escenarios = new Escenarios();
+    
     public Agents() {   
 
     }
@@ -79,9 +80,10 @@ public class Agents implements Runnable {
      * @param cp
      *
      */
-    //MonitorGeneral m;
+    
     public Agents(String classimage, int posx, int posy, MonitorGeneral mon, String name, String band, int type,ControlPanel cp) {
         try{
+         r = new Random();
         inconcert = 0;
         alive = true;
      //   flag = true;
@@ -96,7 +98,6 @@ public class Agents implements Runnable {
         this.type = type;
      //   this.mb = mb;
         this.band = band;
-        this.cp = cp;
          ball = ImageIO.read(new File("src/simulador/img/ball.png"));
          
         }

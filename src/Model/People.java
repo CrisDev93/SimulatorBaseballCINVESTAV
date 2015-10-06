@@ -13,7 +13,7 @@ import Controller.Rules;
 
 /**
  *
- * @author Edy
+ * @author Cristian Michel
  */
 public class People extends Agents {
 
