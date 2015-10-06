@@ -79,6 +79,7 @@ public class Out {
     boolean sumarx=false;
     boolean sumary=false;
     Agents b = a.getAgent("Ball");
+    while(b.xTemp == 0 & b.yTemp == 0){System.out.println("waiting");}
     xTemp = a.xTemp + a.r.nextInt(50 - 20) + 20;
     yTemp = a.yTemp + a.r.nextInt(50 - 20) + 20;
     if(a.x < b.x) sumarx = true;
@@ -123,7 +124,8 @@ public class Out {
     
     // Acá finaliza el recorrido a la pelota    
    while(b.goal == false);
-   this.CatchBallBeforeField(a);
+   CatchBallBeforeField(a);
+   b.movements.trhowBall(b,b.movements.getNextBaseClose(a), 0, null);
    
    
    

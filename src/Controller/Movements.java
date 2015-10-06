@@ -274,7 +274,8 @@ public class Movements {
  private double getDistance(Agents agent,Agents ball){
      // System.out.println("Agente: "+agent+" Pelota: "+ball);
      double distance;
-     distance = Math.sqrt(  (  Math.pow((ball.x - agent.x),2)   +    Math.pow((ball.y - agent.y),2)  )   );
+    
+     distance = Math.sqrt(  (  Math.pow((ball.xTemp - agent.x),2)   +    Math.pow((ball.yTemp - agent.y),2)  )   );
      
  return distance;
  }

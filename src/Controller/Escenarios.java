@@ -51,7 +51,8 @@ public class Escenarios extends Movements{
      int [] ncot = {PITCHER[0] - rx,(PITCHER[1] - ry)};
      nco = ncot;
      }
-     
+     balon.xTemp = nco[0];
+     balon.yTemp = nco[1];
      trhowBall(balon,PITCHER,11,nco);
      
      Agents ba = getBestAgent(balon);

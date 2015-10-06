@@ -26,7 +26,7 @@ import Controller.MonitorGeneral;
 import Controller.Movements;
 import Controller.Rules;
 import Controller.RulesReader;
-
+import Controller.Out;
 /**
  *
  * @author Edy
@@ -61,7 +61,7 @@ public class Agents implements Runnable {
     public static RulesReader rr = new RulesReader();
     public Movements movements = new Movements();
     public static Escenarios escenarios = new Escenarios();
-    
+    Out out = new Out();
     public Agents() {   
 
     }
@@ -384,6 +384,7 @@ tmp = tmp + ru.charAt(i);
    speed = 30;
    this.movements.toFirstBase(this);
    destination = 0;
+   speed = 40;
  }
  if(this.destination == 2)
  {
@@ -391,6 +392,7 @@ tmp = tmp + ru.charAt(i);
    speed = 30;
    this.movements.toSecondBase(this);
    destination = 0;
+   speed = 40;
  }
  if(this.destination == 3)
  {
@@ -406,13 +408,32 @@ tmp = tmp + ru.charAt(i);
    this.movements.toHome(this);
    destination = 0;
  }
+ if(this.destination  == -1)
+ {
+ speed = 40;
+ if(r.nextBoolean()){
+ out.CatchBallBeforeField(this);
+ }
+ else {
+ out.getBallAndThrow(this, 1);
+ }
  
+ }
  
  }
 public void moveAgents(int destinationl,int cont) throws InterruptedException {
     
     if(this.rol.equals("controler"))
     {
+        /*
+        b = ball 
+        o = out 
+        co = contacto pelota 
+        s = strike 
+        f = foul 
+        p = ponche 
+        
+        */
         
         Rule nr = this.rules.getRule();
         System.out.println("REGLA ACTUAL : "+nr.escenario);
@@ -427,14 +448,16 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
         }
         if(nr.escenario.equals("co"))
         {
-        if( this.rules.nextRule().escenario.equals("o") )
-        {
-        this.getAgent("Batter").speed = (int) this.getAgent("Ball").speed / 2;
-        System.out.println(this.getAgent("Batter").speed);
-        }
+            // QUEDE ACA EN ELEGIR AL MEJOR AGENTE EN BASE A LAS COORDENADAS TEMPORALES DEL BALON
+         if( rules.nextRule().escenario.equals("o"))
+         {
+         System.out.println("YA");
+         Agents tmpb = this.movements.getBestAgent(this.getAgent("Ball"));
+         tmpb.destination = -1;
+         tmpb.speed = 40;
+         }
         escenarios.contactoPelota(this);
         }
-        
         
         
         }
