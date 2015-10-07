@@ -8,6 +8,8 @@ package Controller;
 import Model.Agents;
 import java.util.ArrayList;
 import Model.Coords;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Cristian Michel
@@ -70,11 +72,23 @@ public class Movements {
     boolean sumarx=false;
     boolean sumary=false;
     
+    int up;
+    if(a.rol.equals("Ball") ) up = 1;
+    else  up = 2;
+    System.out.println("to first");
+
     if(a.x < Agents.FIRSTBASEMAN[0]) sumarx = true;
     if(a.y < Agents.FIRSTBASEMAN[1]) sumary = true;
     while(true)
     {
+  if(a.rol.equals("Batter")) System.out.println("BATTER SPEED : "+a.speed);
+  else {System.out.println(a.rol+" SPEED : "+a.speed);}
+
      try{
+     if(a.x > Agents.FIRSTBASEMAN[0] && sumarx) a.x = Agents.FIRSTBASEMAN[0];
+     if(a.x < Agents.FIRSTBASEMAN[0] && sumarx == false) a.x = Agents.FIRSTBASEMAN[0];
+     if(a.y > Agents.FIRSTBASEMAN[1] && sumary) a.y = Agents.FIRSTBASEMAN[1];
+     if(a.y < Agents.FIRSTBASEMAN[1] && sumary == false) a.y = Agents.FIRSTBASEMAN[1];
      Thread.sleep(a.speed);
     if(a.x == Agents.FIRSTBASEMAN[0] && a.y == Agents.FIRSTBASEMAN[1]){ a.flagmove = false; break;}
     else {
@@ -88,7 +102,7 @@ public class Movements {
      /*Condicionales para X */   
     if(a.x == Agents.FIRSTBASEMAN[0]);
     else {
-    if(sumarx) a.x++;
+    if(sumarx) a.x = a.x + up;
     else a.x --;
     }
     
@@ -111,12 +125,16 @@ public class Movements {
     {
     boolean sumarx=false;
     boolean sumary=false;
+    a.speed = 40;
     
+    System.out.println("to second");
     if(a.x < Agents.SECONDBASEMAN[0]) sumarx = true;
     if(a.y < Agents.SECONDBASEMAN[1]) sumary = true;
     while(true)
     {
+  
      try{
+     
      Thread.sleep(a.speed);
     if(a.x == Agents.SECONDBASEMAN[0] && a.y == a.SECONDBASEMAN[1]){ a.flagmove = false; break;}
     else {
@@ -245,6 +263,12 @@ public class Movements {
  {
      /*I create the array of agents that can get the ball in this moment*/
      Agents[] a = new Agents[6];
+     while(ball.xTemp == 0 && ball.yTemp == 0){try {
+         Thread.sleep(40);
+         } catch (InterruptedException ex) {
+             Logger.getLogger(Movements.class.getName()).log(Level.SEVERE, null, ex);
+         }
+}
      a[0] = ball.getAgent("First Baseman");
      a[1] = ball.getAgent("Second Baseman");
      a[2] = ball.getAgent("Third Baseman");
@@ -254,7 +278,7 @@ public class Movements {
     // a[6] = ball.getAgent("Short Fielder");
         /*And now, I sort the array using bubble sort algorithm with the parameters x and y calculating the distance between these 2 points (ball and agent) of each agent,
         afther that I return the agent more close */
-        for (Agents a1 : a) {
+        for (int i = 0 ; i<a.length ; i++) {
             for(int j = 0;j<a.length-1;j++)
             {
                 if(getDistance(a[j],ball) > getDistance(a[j+1],ball))
@@ -331,13 +355,15 @@ public class Movements {
  
  public void toPitcherGo(Agents a,int xm,int ym)
     {
+          a.pointer = 9;
+
     boolean sumarx=false;
     boolean sumary=false;
     int xl,yl;
     if(a.rol.equals("Ball")){ xl = xm; yl = ym;}
     else {
-    xl = Agents.BATTER[0];
-    yl = Agents.BATTER[1];
+    xl = Agents.PITCHER[0];
+    yl = Agents.PITCHER[1];
     }
     if(a.x < xl) sumarx = true;
     if(a.y < yl) sumary = true;
@@ -346,7 +372,7 @@ public class Movements {
      try{
      Thread.sleep(a.speed);
      
-     if(a.x == xl && a.y == yl){ a.flagmove = false;System.out.println("DONE"); break;}
+     if(a.x == xl && a.y == yl){ a.flagmove = false;System.out.println("DONE TO PITCHER GO");a.goal = true; break;}
   
     else {
    //    System.out.println("Homing");
@@ -354,7 +380,6 @@ public class Movements {
       {
       a.flagmove= true;
       a.move="right";
-      a.pointer = 9;
       } 
      //System.out.println("Moving -> "+a.rol);
      /*Condicionales para X */   
@@ -385,7 +410,6 @@ public class Movements {
  {
  if(opc == 10) ball.initialPosition(1);
 // if(opc == 11 ){ Agents btt = ball.getAgent("Batter"); btt.flag = true; btt.speed = 30;toFirstBase(btt);} 
-
  if(coords == Agents.FIRSTBASEMAN) toFirstBase(ball);
  if(coords == Agents.SECONDBASEMAN) toSecondBase(ball);
  if(coords == Agents.THIRDBASEMAN) toThirdBase(ball);

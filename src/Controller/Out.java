@@ -5,6 +5,8 @@
  */
 package Controller;
 import Model.Agents;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Cristian Michel
@@ -20,7 +22,7 @@ public class Out {
      */
     public void CatchBallBeforeField(Agents a)
     {
-    
+    System.out.println("!!!!!!!!!!!!!!!!!!");
     boolean sumarx=false;
     boolean sumary=false;
     Agents b = a.getAgent("Ball");
@@ -30,6 +32,8 @@ public class Out {
     while(flag)
     {
      try{
+    //     System.out.println("gonna for "+b.xTemp+","+b.yTemp);
+
      Thread.sleep(a.speed);
     if(a.x == b.xTemp && a.y == b.yTemp){ a.flagmove = false;
     System.out.println("DONE !");
@@ -65,9 +69,10 @@ public class Out {
     }
     
     // Acá finaliza el recorrido a la pelota    
-    
+//   a.movements.trhowBall(b, a.movements.getNextBaseClose(a),0, null);
     
     }
+    
     
     
     /**
@@ -75,22 +80,30 @@ public class Out {
      @param pass it's the key of the recursion if pass == 1 then throw ball with the same position of the ball and agents, else make a recursion with the pass == 0 */
    public void getBallAndThrow(Agents a,int pass)
    {
+       a.pointer = 9;
+       System.out.println("YA LLEGUE A GET BALL AND THROW");
     int xTemp,yTemp;
     boolean sumarx=false;
     boolean sumary=false;
     Agents b = a.getAgent("Ball");
-    while(b.xTemp == 0 & b.yTemp == 0){System.out.println("waiting");}
-    xTemp = a.xTemp + a.r.nextInt(50 - 20) + 20;
-    yTemp = a.yTemp + a.r.nextInt(50 - 20) + 20;
-    if(a.x < b.x) sumarx = true;
-    if(a.y < b.y) sumary = true;
+    while(b.xTemp == 0 & b.yTemp == 0){try {
+        Thread.sleep(300);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Out.class.getName()).log(Level.SEVERE, null, ex);
+        }
+}
+    xTemp = b.xTemp + a.r.nextInt(15 - 10) + 10;
+    yTemp = b.yTemp + a.r.nextInt(15 - 10) + 10;
+    if(a.x < xTemp) sumarx = true;
+    if(a.y < yTemp) sumary = true;
     
     while(flag)
     {
      try{
+   // System.out.println("gonna for "+xTemp+","+yTemp);
      Thread.sleep(a.speed);
-    if(a.x == b.x && a.y == b.y){ a.flagmove = false;
-    System.out.println("DONE !");
+    if(a.x == xTemp && a.y == yTemp){ a.flagmove = false;
+    System.out.println("DONE BEST AGENT GOAL !");
     
     break;
     }
@@ -100,11 +113,11 @@ public class Out {
       {
       a.flagmove= true;
       a.move="right";
-      a.pointer = 9;
+      
       } 
    //  System.out.println("Moving -> "+a.rol);
      /*Condicionales para X */   
-    if(a.x == b.x);
+    if(a.x == xTemp);
     else {
     if(sumarx) a.x++;
     else a.x --;
@@ -112,7 +125,7 @@ public class Out {
     
     /*Condicionales para Y*/
     
-   if(a.y == b.y);
+   if(a.y == yTemp);
    else{
    if(sumary) a.y++;
    else a.y --;
@@ -123,9 +136,14 @@ public class Out {
     }
     
     // Acá finaliza el recorrido a la pelota    
-   while(b.goal == false);
-   CatchBallBeforeField(a);
-   b.movements.trhowBall(b,b.movements.getNextBaseClose(a), 0, null);
+   while(b.goal == false){System.out.println("No goal");
+       
+   }
+    CatchBallBeforeField(a);
+    int [] obj  = b.movements.getNextBaseClose(a);
+    System.out.println("EL MÁS OPTIMO: "+obj[0]+","+obj[1]+" y FirstBaseman es: "+Agents.FIRSTBASEMAN[0]+","+Agents.FIRSTBASEMAN[1]);
+
+ b.movements.trhowBall(b,obj, 0, null);
    
    
    

@@ -33,7 +33,7 @@ public class Escenarios extends Movements{
     
      trhowBall(balon,BATTER,10,null);
      
-     batter.destination = 1;
+ 
      
      ry = a.r.nextInt(60 - 30 ) + 30;
      rx = a.r.nextInt(40 - 10 )+ 10;
@@ -53,13 +53,11 @@ public class Escenarios extends Movements{
      }
      balon.xTemp = nco[0];
      balon.yTemp = nco[1];
+     System.out.println("BALLL COORDS TMP "+balon.xTemp+","+balon.yTemp);
+     
+      batter.destination = 1;
      trhowBall(balon,PITCHER,11,nco);
      
-     Agents ba = getBestAgent(balon);
-     ba.speed = batter.speed * 2;
-     ba.move ="down";
-     toBall(ba);
-     trhowBall(balon,FIRSTBASEMAN,0,null);
      
     
     }

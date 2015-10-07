@@ -37,6 +37,7 @@ public class Agents implements Runnable {
     // Primitivos 
     public  int leftconcert =0,inconcert,ALocation,dx,dy,x,y,type=0,team,pointer=0,destination=0,speed = 0,xTemp,yTemp;
     public boolean pause,flag = false,alive,permitActivity,flagmove = false,turn = false,evento = false,nextStack=true,inMovement = false,ballflag = false,goal=false;
+    public static boolean keyball = false;
     public static int[] PITCHER = {523,475},CATCHER={515,545},BATTER={515,525},FIRSTBASEMAN={640,460},SECONDBASEMAN={527,400},
             THIRDBASEMAN={403,465},SHORTSTOP,LEFTFIELDER={351,334},CENTERFIELDER={515,313},RIGHTFIELDER={687,323};
     
@@ -62,6 +63,7 @@ public class Agents implements Runnable {
     public Movements movements = new Movements();
     public static Escenarios escenarios = new Escenarios();
     Out out = new Out();
+    int fi = 0;
     public Agents() {   
 
     }
@@ -381,10 +383,11 @@ tmp = tmp + ru.charAt(i);
  if(this.destination == 1)
  {
    flag = true; 
-   speed = 30;
+  
    this.movements.toFirstBase(this);
    destination = 0;
-   speed = 40;
+   
+   
  }
  if(this.destination == 2)
  {
@@ -410,15 +413,33 @@ tmp = tmp + ru.charAt(i);
  }
  if(this.destination  == -1)
  {
- speed = 40;
+ System.out.println("YES -1");
+
  if(r.nextBoolean()){
- out.CatchBallBeforeField(this);
+ System.out.println(rol + "CatchBallBeforeField");
+out.CatchBallBeforeField(this);
+destination = 0;
+
  }
  else {
- out.getBallAndThrow(this, 1);
+ 
+ System.out.println(rol + "getBallAndThrow");    
+out.getBallAndThrow(this, 1);
+destination = 0;
  }
  
  }
+ 
+ if(this.destination  == -2)
+ {
+  System.out.println("YES -2");
+ Agents tmpA = this.movements.getBestAgent(this.getAgent("Ball"));
+  tmpA.speed = this.getAgent("Batter").speed / 2;
+
+ tmpA.destination = -1;
+ this.destination = 0;
+ }
+ 
  
  }
 public void moveAgents(int destinationl,int cont) throws InterruptedException {
@@ -434,28 +455,34 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
         p = ponche 
         
         */
-        
+        Thread.sleep(3000);
         Rule nr = this.rules.getRule();
         System.out.println("REGLA ACTUAL : "+nr.escenario);
         if(nr != null)
         {
-        if(nr.escenario.equals("b"))
+        if(nr.escenario.equals("b") && fi == 0)
         { 
         escenarios.bola(this);
          System.out.println(this.rol);
-
+         
             
         }
-        if(nr.escenario.equals("co"))
+        if(nr.escenario.equals("co") && fi ==0)
         {
             // QUEDE ACA EN ELEGIR AL MEJOR AGENTE EN BASE A LAS COORDENADAS TEMPORALES DEL BALON
-         if( rules.nextRule().escenario.equals("o"))
+         if( rules.nextRule().escenario.equals("o") && fi == 0)
          {
+         fi = 1;
          System.out.println("YA");
-         Agents tmpb = this.movements.getBestAgent(this.getAgent("Ball"));
-         tmpb.destination = -1;
-         tmpb.speed = 40;
+         Agents tmpb = this.getAgent("wait");
+         rules.getRule();
+         
+         tmpb.destination = -2;
+        // tmpb.speed = 40;
          }
+        Agents bt = getAgent("Batter");
+        bt.speed = bt.r.nextInt(70 - 30) + 30;
+        getAgent("Ball").speed = bt.speed / 2;
         escenarios.contactoPelota(this);
         }
         
