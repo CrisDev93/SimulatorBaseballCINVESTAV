@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 public class WindowSimulator extends JFrame {
 
     ControlPanel cp;
+    public int x = 1200;
+    public int y = 700;
 	public WindowSimulator() throws IOException {
             String stage="img/baseballmap.png";
                 
@@ -17,7 +19,7 @@ public class WindowSimulator extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		add(new Drawn(stage));
 		setTitle("Escenario");
-		setSize(1200,700);
+		setSize(x,y);
 		setVisible(true);
 		setLocationRelativeTo(null);
 		setResizable(false);

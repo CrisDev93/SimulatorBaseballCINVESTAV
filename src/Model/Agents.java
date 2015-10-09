@@ -35,7 +35,7 @@ public class Agents implements Runnable {
     
 
     // Primitivos 
-    public  int leftconcert =0,inconcert,ALocation,dx,dy,x,y,type=0,team,pointer=0,destination=0,speed = 0,xTemp,yTemp;
+    public  int leftconcert =0,inconcert,ALocation,dx,dy,x,y,type=0,team,pointer=0,destination=0,speed = 0,xTemp,yTemp,sinalRule = 0;
     public boolean pause,flag = false,alive,permitActivity,flagmove = false,turn = false,evento = false,nextStack=true,inMovement = false,ballflag = false,goal=false;
     public static boolean keyball = false;
     public static int[] PITCHER = {523,475},CATCHER={515,545},BATTER={515,525},FIRSTBASEMAN={640,460},SECONDBASEMAN={527,400},
@@ -64,6 +64,7 @@ public class Agents implements Runnable {
     public static Escenarios escenarios = new Escenarios();
     Out out = new Out();
     int fi = 0;
+    static int cout = 0;
     public Agents() {   
 
     }
@@ -192,15 +193,15 @@ for (int i = 0; i < rows; i++)
     
 
  
-    public void draw(Graphics2D g, LinkedList f) throws InterruptedException {
-      Thread.sleep(5);
+    public synchronized void draw(Graphics2D g, LinkedList f) throws InterruptedException {
     //    System.out.println("Column: "+pointer+ " Row: "+row);
     //    System.out.println("I'm drawing" + this.rol);
+      int sw = 0;
         if(move.equals("up")  ){
+            sw++;
             if(this.flagmove ){
                 pointer++;
-                  if(pointer > 8) pointer = 6;
-              //  if (pointer > 3) pointer = 0;
+              if (pointer > 3) pointer = 0;
                  
                 g.drawImage(this.sprites[pointer], x, y, null);
             }
@@ -209,6 +210,7 @@ for (int i = 0; i < rows; i++)
                
         }
          if(move.equals("down")){
+             sw ++;
              if(this.flagmove){
                 pointer++;
                 if(pointer >11) pointer = 9;
@@ -219,15 +221,22 @@ for (int i = 0; i < rows; i++)
 
         }
          if(move.equals("left")){
+             sw ++;
+                         System.out.println("POINTER "+pointer + " STATUS "+flagmove);
+
              if(this.flagmove){
-                pointer++;
-                if(pointer >5) pointer = 3;
-            
+          
+             if(r.nextInt((20  - 0) - 0) < 5)pointer++;
+                if(pointer >5) {pointer = 3;}
+                
+             //Thread.sleep(r.nextInt(15 - 3) + 3);
                 g.drawImage(this.sprites[pointer], x, y, null);
              }
-             else  g.drawImage(this.sprites[1], x, y, null);
+             else{ 
+                 g.drawImage(this.sprites[1], x, y, null);}
         }
           if(move.equals("right")) {
+              sw ++;
                  if(this.flagmove){
                 pointer++;
                   if(pointer > 8) pointer = 6;
@@ -242,7 +251,9 @@ for (int i = 0; i < rows; i++)
                 }
                  
         }
-
+          
+        if(sw == 0)
+        {
           if(this.rol.equals("wait")){
           g.drawImage(this.sprites[1], x, y, null);
      //     System.out.println("Voy a dibujar a : "+rol+" en ->"+x+","+y);
@@ -259,6 +270,7 @@ for (int i = 0; i < rows; i++)
         this.e = f;
                 //  System.out.println("Voy a dibujar a : "+rol+" en ->"+x+","+y);
 
+        }
     }
 
     /**
@@ -473,7 +485,8 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
          if( rules.nextRule().escenario.equals("o") && fi == 0)
          {
          fi = 1;
-         System.out.println("YA");
+         cout++;
+        
          Agents tmpb = this.getAgent("wait");
          rules.getRule();
          
@@ -482,7 +495,7 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
          }
         Agents bt = getAgent("Batter");
         bt.speed = bt.r.nextInt(70 - 30) + 30;
-        getAgent("Ball").speed = bt.speed / 2;
+        getAgent("Ball").speed = bt.speed / 5;
         escenarios.contactoPelota(this);
         }
         

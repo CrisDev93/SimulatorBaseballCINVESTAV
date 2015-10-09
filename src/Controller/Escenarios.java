@@ -55,7 +55,7 @@ public class Escenarios extends Movements{
      balon.yTemp = nco[1];
      System.out.println("BALLL COORDS TMP "+balon.xTemp+","+balon.yTemp);
      
-      batter.destination = 1;
+     batter.destination = 1;
      trhowBall(balon,PITCHER,11,nco);
      
      

@@ -22,10 +22,11 @@ public class Out {
      */
     public void CatchBallBeforeField(Agents a)
     {
-    System.out.println("!!!!!!!!!!!!!!!!!!");
+        
     boolean sumarx=false;
     boolean sumary=false;
     Agents b = a.getAgent("Ball");
+    b.sinalRule = 1;
     if(a.x < b.xTemp) sumarx = true;
     if(a.y < b.yTemp) sumary = true;
     

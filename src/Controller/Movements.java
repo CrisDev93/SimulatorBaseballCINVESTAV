@@ -8,6 +8,7 @@ package Controller;
 import Model.Agents;
 import java.util.ArrayList;
 import Model.Coords;
+import View.WindowSimulator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -19,6 +20,7 @@ public class Movements {
     
     public void toHome(Agents a)
     {
+     
     boolean sumarx=false;
     boolean sumary=false;
     int xl,yl;
@@ -26,15 +28,24 @@ public class Movements {
     else {
     xl = Agents.BATTER[0];
     yl = Agents.BATTER[1];
+   String [] sm = this.getTypeOfMove(a,xl,yl);
+   a.move = sm[0];
+   a.pointer = Integer.parseInt(sm[1]);
+    
     }
     if(a.x < xl) sumarx = true;
     if(a.y < yl) sumary = true;
-    while(true)
+    while(a.pause == false)
     {
      try{
      Thread.sleep(a.speed);
      
-     if(a.x == xl && a.y == yl){ a.flagmove = false;System.out.println("DONE"); break;}
+     if(a.x == xl && a.y == yl){
+         if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = true;
+         a.pointer = 0;
+         a.flagmove = false;System.out.println("DONE"); break;
+     
+     }
   
     else {
      //  System.out.println("Homing");
@@ -64,7 +75,8 @@ public class Movements {
      catch(Exception e){ e.printStackTrace(); }   
     }
     
-        
+  if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
+
     }
     
     public void toFirstBase(Agents a)
@@ -79,25 +91,33 @@ public class Movements {
 
     if(a.x < Agents.FIRSTBASEMAN[0]) sumarx = true;
     if(a.y < Agents.FIRSTBASEMAN[1]) sumary = true;
-    while(true)
+    if(!a.rol.equals("Ball"))
     {
-  if(a.rol.equals("Batter")) System.out.println("BATTER SPEED : "+a.speed);
-  else {System.out.println(a.rol+" SPEED : "+a.speed);}
-
+     String [] sm = this.getTypeOfMove(a,Agents.FIRSTBASEMAN[0],Agents.FIRSTBASEMAN[1]);
+     a.move = sm[0];
+     a.pointer = Integer.parseInt(sm[1]);
+     a.flagmove = true;
+     System.out.println("*******  "+sm[0]+" **************");
+        
+    }
+    while(a.pause == false)
+    {
+    System.err.println(a.pause + " TO F " + a.rol);
      try{
      if(a.x > Agents.FIRSTBASEMAN[0] && sumarx) a.x = Agents.FIRSTBASEMAN[0];
      if(a.x < Agents.FIRSTBASEMAN[0] && sumarx == false) a.x = Agents.FIRSTBASEMAN[0];
      if(a.y > Agents.FIRSTBASEMAN[1] && sumary) a.y = Agents.FIRSTBASEMAN[1];
      if(a.y < Agents.FIRSTBASEMAN[1] && sumary == false) a.y = Agents.FIRSTBASEMAN[1];
      Thread.sleep(a.speed);
-    if(a.x == Agents.FIRSTBASEMAN[0] && a.y == Agents.FIRSTBASEMAN[1]){ a.flagmove = false; break;}
+    if(a.x == Agents.FIRSTBASEMAN[0] && a.y == Agents.FIRSTBASEMAN[1]){ 
+        if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = true;
+        a.flagmove = false; 
+        a.pointer = 0;
+        break;
+    
+    }
     else {
-      if(!(a.rol.equals("Ball")|| a.rol.equals("controler")))  
-      {
-      a.flagmove= true;
-      a.move="right";
-      a.pointer = 9;
-      } 
+      
     // System.out.println("Moving -> "+a.rol);
      /*Condicionales para X */   
     if(a.x == Agents.FIRSTBASEMAN[0]);
@@ -118,7 +138,9 @@ public class Movements {
      catch(Exception e){}   
     }
     
-        
+
+    if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
+    a.flagmove = false;  
     }
     
     public void toSecondBase(Agents a)
@@ -130,20 +152,28 @@ public class Movements {
     System.out.println("to second");
     if(a.x < Agents.SECONDBASEMAN[0]) sumarx = true;
     if(a.y < Agents.SECONDBASEMAN[1]) sumary = true;
-    while(true)
+    if(!a.rol.equals("Ball"))
+    {
+     String [] sm = this.getTypeOfMove(a,Agents.SECONDBASEMAN[0],Agents.SECONDBASEMAN[1]);
+     a.move = sm[0];
+     a.pointer = Integer.parseInt(sm[1]);
+     a.flagmove = true; 
+        
+    }
+    while(a.pause == false)
     {
   
      try{
      
      Thread.sleep(a.speed);
-    if(a.x == Agents.SECONDBASEMAN[0] && a.y == a.SECONDBASEMAN[1]){ a.flagmove = false; break;}
+
+    if(a.x == Agents.SECONDBASEMAN[0] && a.y == a.SECONDBASEMAN[1]){
+      if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = true;
+        a.flagmove = false;
+        a.pointer = 0;
+        break;}
     else {
-      if(!(a.rol.equals("Ball")|| a.rol.equals("controler")))  
-      {
-      a.flagmove= true;
-      a.move="right";
-      a.pointer = 9;
-      } 
+   
      //System.out.println("Moving -> "+a.rol);
      /*Condicionales para X */   
     if(a.x == Agents.SECONDBASEMAN[0]);
@@ -164,7 +194,8 @@ public class Movements {
      catch(Exception e){ e.printStackTrace(); }   
     }
     
-        
+    if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
+    a.flagmove = false; 
     }
     
     public void toThirdBase(Agents a)
@@ -174,18 +205,26 @@ public class Movements {
     
     if(a.x < Agents.THIRDBASEMAN[0]) sumarx = true;
     if(a.y < Agents.THIRDBASEMAN[1]) sumary = true;
-    while(true)
+    if(!a.rol.equals("Ball"))
+    {
+     String [] sm = this.getTypeOfMove(a,Agents.THIRDBASEMAN[0],Agents.THIRDBASEMAN[1]);
+     a.move = sm[0];
+     a.pointer = Integer.parseInt(sm[1]);
+      
+        
+    }
+    while(a.pause == false)
     {
      try{
      Thread.sleep(a.speed);
-    if(a.x == Agents.THIRDBASEMAN[0] && a.y == Agents.THIRDBASEMAN[1]){ a.flagmove = false; break;}
+    if(a.x == Agents.THIRDBASEMAN[0] && a.y == Agents.THIRDBASEMAN[1]){
+      if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = true;
+        a.flagmove = false;
+        a.pointer = 0;
+        a.flagmove = true;
+        break;}
     else {
-      if(!(a.rol.equals("Ball")|| a.rol.equals("controler")))  
-      {
-      a.flagmove= true;
-      a.move="right";
-      a.pointer = 9;
-      } 
+      
     // System.out.println("Moving -> "+a.rol);
      /*Condicionales para X */   
     if(a.x == Agents.THIRDBASEMAN[0]);
@@ -206,7 +245,8 @@ public class Movements {
      catch(Exception e){}   
     }
     
-        
+   if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
+   a.flagmove = false;
     }
     
     
@@ -219,23 +259,22 @@ public class Movements {
     if(a.x < b.x) sumarx = true;
     if(a.y < b.y) sumary = true;
     
-    while(flag)
+    while(a.pause == false)
     {
      try{
      Thread.sleep(a.speed);
-    if(a.x == b.x && a.y == b.y){ a.flagmove = false;
+    if(a.x == b.x && a.y == b.y){
+    if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = true;
+
+        a.flagmove = false;
+        a.pointer = 0;
     System.out.println("DONE !");
     
     break;
     }
     else {
   //  System.out.println("Now: "+a.x+","+a.y+" Goal: "+b.x+","+b.y);
-      if(!(a.rol.equals("Ball")|| a.rol.equals("controler")))  
-      {
-      a.flagmove= true;
-      a.move="right";
-      a.pointer = 9;
-      } 
+      
    //  System.out.println("Moving -> "+a.rol);
      /*Condicionales para X */   
     if(a.x == b.x);
@@ -256,6 +295,7 @@ public class Movements {
      catch(Exception e){}   
     }
     
+if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
         
     }
  
@@ -300,13 +340,14 @@ public class Movements {
      double distance;
     
      distance = Math.sqrt(  (  Math.pow((ball.xTemp - agent.x),2)   +    Math.pow((ball.yTemp - agent.y),2)  )   );
-     
+     System.out.println("-----> "+distance);
  return distance;
  }
  
  public void ball(Agents a)
  {
-     a.initialPosition(1);
+    a.pointer = 9;
+    a.initialPosition(1);
     boolean sumarx=false;
     boolean sumary=false;
     int morex,morey;
@@ -317,17 +358,18 @@ public class Movements {
     tmp[1]+= morey;
     if(a.x < tmp[0]) sumarx = true;
     if(a.y < tmp[1]) sumary = true;
-    while(true)
+    while(a.pause == false)
     {
      try{
      Thread.sleep(a.speed);
-    if(a.x == tmp[0] && a.y == tmp[1]){ a.flagmove = false; break;}
+    if(a.x == tmp[0] && a.y == tmp[1]){ a.flagmove = false;
+    a.pointer = 0;
+    break;}
     else {
       if(!(a.rol.equals("Ball")|| a.rol.equals("controler")))  
       {
       a.flagmove= true;
       a.move="right";
-      a.pointer = 9;
       } 
     // System.out.println("Moving -> "+a.rol);
      /*Condicionales para X */   
@@ -367,12 +409,20 @@ public class Movements {
     }
     if(a.x < xl) sumarx = true;
     if(a.y < yl) sumary = true;
-    while(true)
+    while(a.pause == false)
     {
+        
+  //   System.out.println(a.sinalRule);
      try{
      Thread.sleep(a.speed);
      
-     if(a.x == xl && a.y == yl){ a.flagmove = false;System.out.println("DONE TO PITCHER GO");a.goal = true; break;}
+     if(a.x == xl && a.y == yl){
+         if(a.rol.equals("Ball") && a.sinalRule == 1){ a.getAgent("Batter").pause = true;
+                  System.out.println("READY "+a.getAgent("Batter").rol+ " STATUS : "+a.getAgent("Batter").pause);
+
+         }
+
+         a.flagmove = false;System.out.println("DONE TO PITCHER GO");a.goal = true; break;}
   
     else {
    //    System.out.println("Homing");
@@ -456,5 +506,41 @@ public class Movements {
          
       return cords;
      
+}
+ 
+public String [] getTypeOfMove(Agents a,int xGoal,int yGoal)
+{
+if(xGoal > yGoal)
+{
+    if(a.x < xGoal) 
+    {
+        String [] s =  {"left","3"};
+        return s;
+    }
+    else
+    {
+        String [] s = {"right","6"};
+        return s; 
+    }
+}
+else 
+{
+    if(a.y < yGoal)
+    {
+        String [] s = {"up","0"};
+        return s;
+    }
+    else 
+    {
+
+        String [] s = {"down","9"};
+        return s;
+
+    }
+
+    
+}
+    
+    
 }
 }
