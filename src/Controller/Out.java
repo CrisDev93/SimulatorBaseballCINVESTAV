@@ -81,7 +81,7 @@ public class Out {
      @param pass it's the key of the recursion if pass == 1 then throw ball with the same position of the ball and agents, else make a recursion with the pass == 0 */
    public void getBallAndThrow(Agents a,int pass)
    {
-       a.pointer = 9;
+       
        System.out.println("YA LLEGUE A GET BALL AND THROW");
     int xTemp,yTemp;
     boolean sumarx=false;
@@ -143,7 +143,7 @@ public class Out {
     CatchBallBeforeField(a);
     int [] obj  = b.movements.getNextBaseClose(a);
     System.out.println("EL MÁS OPTIMO: "+obj[0]+","+obj[1]+" y FirstBaseman es: "+Agents.FIRSTBASEMAN[0]+","+Agents.FIRSTBASEMAN[1]);
-
+ b.speed = b.speedCalculated(obj);
  b.movements.trhowBall(b,obj, 0, null);
    
    

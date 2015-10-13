@@ -79,7 +79,7 @@ public class Movements {
 
     }
     
-    public void toFirstBase(Agents a)
+    public synchronized void toFirstBase(Agents a)
     {
     boolean sumarx=false;
     boolean sumary=false;
@@ -109,6 +109,7 @@ public class Movements {
      if(a.y > Agents.FIRSTBASEMAN[1] && sumary) a.y = Agents.FIRSTBASEMAN[1];
      if(a.y < Agents.FIRSTBASEMAN[1] && sumary == false) a.y = Agents.FIRSTBASEMAN[1];
      Thread.sleep(a.speed);
+     System.out.println(a.rol + " A "+ a.speed + "ms de velocidad");
     if(a.x == Agents.FIRSTBASEMAN[0] && a.y == Agents.FIRSTBASEMAN[1]){ 
         if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = true;
         a.flagmove = false; 
@@ -510,16 +511,17 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
  
 public String [] getTypeOfMove(Agents a,int xGoal,int yGoal)
 {
+System.out.println(a.x+ ", "+a.y+" -> "+xGoal+", "+yGoal);
 if(xGoal > yGoal)
 {
     if(a.x < xGoal) 
     {
-        String [] s =  {"left","3"};
+        String [] s =  {"right","6"};
         return s;
     }
     else
     {
-        String [] s = {"right","6"};
+        String [] s = {"left","3"};
         return s; 
     }
 }
@@ -527,13 +529,13 @@ else
 {
     if(a.y < yGoal)
     {
-        String [] s = {"up","0"};
+        String [] s = {"down","9"};
         return s;
     }
     else 
     {
 
-        String [] s = {"down","9"};
+        String [] s = {"up","0"};
         return s;
 
     }

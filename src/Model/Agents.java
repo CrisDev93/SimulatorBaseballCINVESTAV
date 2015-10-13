@@ -200,7 +200,8 @@ for (int i = 0; i < rows; i++)
         if(move.equals("up")  ){
             sw++;
             if(this.flagmove ){
-                pointer++;
+         if(r.nextInt((20  - 0) - 0) < 5)pointer++;
+
               if (pointer > 3) pointer = 0;
                  
                 g.drawImage(this.sprites[pointer], x, y, null);
@@ -212,7 +213,7 @@ for (int i = 0; i < rows; i++)
          if(move.equals("down")){
              sw ++;
              if(this.flagmove){
-                pointer++;
+            if(r.nextInt((20  - 0) - 0) < 5)pointer++;
                 if(pointer >11) pointer = 9;
               
                 g.drawImage(this.sprites[pointer], x, y, null);
@@ -238,7 +239,8 @@ for (int i = 0; i < rows; i++)
           if(move.equals("right")) {
               sw ++;
                  if(this.flagmove){
-                pointer++;
+              if(r.nextInt((20  - 0) - 0) < 5)pointer++;
+//  pointer++;
                   if(pointer > 8) pointer = 6;
               //  if (pointer > 3) pointer = 0;
                  try{
@@ -352,9 +354,9 @@ for (int i = 0; i < rows; i++)
 
     public void initialPosition(int location) {
        // System.out.println("ASGINADOOOOOOOOOOOOO "+rol);
-          if (location == 1)  {this.x = PITCHER[0]; this.y = PITCHER[1];}
-          if (location == 2 ) {this.x = BATTER[0]; this.y = BATTER[1];}
-          if (location == 3 ) {this.x = CATCHER[0]; this.y = CATCHER[1];}
+          if(location == 1)  {this.x = PITCHER[0]; this.y = PITCHER[1];}
+          if(location == 2 ) {this.x = BATTER[0]; this.y = BATTER[1];}
+          if(location == 3 ) {this.x = CATCHER[0]; this.y = CATCHER[1];}
           if(location == 4)   {this.x = FIRSTBASEMAN[0];  this.y=FIRSTBASEMAN[1];}
           if(location == 5)   {this.x = SECONDBASEMAN[0];  this.y=SECONDBASEMAN[1];}
           if(location == 6)   {this.x= THIRDBASEMAN[0]; this.y = THIRDBASEMAN[1];}
@@ -446,7 +448,7 @@ destination = 0;
  {
   System.out.println("YES -2");
  Agents tmpA = this.movements.getBestAgent(this.getAgent("Ball"));
-  tmpA.speed = this.getAgent("Batter").speed / 2;
+ tmpA.speed = this.getAgent("Batter").speed / 2;
 
  tmpA.destination = -1;
  this.destination = 0;
@@ -495,7 +497,7 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
          }
         Agents bt = getAgent("Batter");
         bt.speed = bt.r.nextInt(70 - 30) + 30;
-        getAgent("Ball").speed = bt.speed / 5;
+        getAgent("Ball").speed = bt.speed / 6;
         escenarios.contactoPelota(this);
         }
         
@@ -533,5 +535,32 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
  //}
  
  }
+ 
+public int speedCalculated(int [] base)
+{
+ Agents runner = getAgent("Batter");
+ Agents Ball = getAgent("Ball");
+ 
+ float distancePlayer,distanceBall; 
+ float costPlayer;
+ int speedReturn;
+ distancePlayer = (int) Math.sqrt( ( Math.pow(  (base[0] - runner.x) ,2) ) + (Math.pow((base[1] - runner.y) , 2) )  );
+ distanceBall = (int) Math.sqrt( ( Math.pow(  (base[0] - Ball.x) ,2) ) + (Math.pow((base[1] - Ball.y) , 2) )  );
+ costPlayer = (distanceBall / distancePlayer);
+ if(costPlayer  == 1) costPlayer = 2;
+ int round = (int) Math.rint(costPlayer) +3;
+
+ speedReturn = runner.speed / round ;
+ if(speedReturn < 0) speedReturn = 0;
+ 
+ 
+ System.out.println("** Distancia Runner a FirstBase : "+distancePlayer);
+ System.out.println("** Velocidad Runner : "+runner.speed);
+ System.out.println("** Consto Runner: "+costPlayer);
+ System.out.println("** Distancia Pelota a FirstBase : "+distanceBall);
+ System.out.println("** Velocidad Pelota calculada: "+speedReturn);
+ System.out.println("** Costo Pelota: "+(distanceBall * speedReturn));
+    return speedReturn;
+}
 }
  
