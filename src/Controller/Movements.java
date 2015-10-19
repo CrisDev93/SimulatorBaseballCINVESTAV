@@ -18,9 +18,10 @@ import java.util.logging.Logger;
 public class Movements {
     public boolean flag = true;
     
-    public void toHome(Agents a)
+    public synchronized void toHome(Agents a)
     {
-     
+    int up = 1;
+    if(a.rol.equals("wait")) up = 10;
     boolean sumarx=false;
     boolean sumary=false;
     int xl,yl;
@@ -59,8 +60,8 @@ public class Movements {
      /*Condicionales para X */   
     if(a.x == xl);
     else {
-    if(sumarx) a.x++;
-    else a.x --;
+    if(sumarx) a.x = a.x + up;
+    else a.x  = a.x - up;
     }
     
     /*Condicionales para Y*/
@@ -454,12 +455,142 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
     
         
     }
- 
- 
+ public void toWaitZone(Agents a)
+    {
+    a.pause = false;
+    boolean sumarx=false;
+    boolean sumary=false;
+    
+    int up;
+    
+    System.out.println("to first");
+    int xGo,yGo;
+    yGo = a.r.nextInt(219 - 163 ) + 163;
+    xGo = a.r.nextInt(1057 - 873) + 873;
+    if(a.x < xGo) sumarx = true;
+    if(a.y < yGo) sumary = true;
+     if(!a.rol.equals("Ball"))
+    {
+     String [] sm = this.getTypeOfMove(a,xGo,yGo);
+     a.move = sm[0];
+     a.pointer = Integer.parseInt(sm[1]);
+     a.flagmove = true;
+     System.out.println("*******  "+sm[0]+" **************");
+        
+    }
+    while(a.pause == false)
+    {
+    System.err.println("TO WAIT ZONE" );
+     try{
+     if(a.x > xGo && sumarx) a.x = xGo;
+     if(a.x < xGo && sumarx == false) a.x =  xGo;
+     if(a.y > yGo && sumary) a.y = yGo;
+     if(a.y < yGo && sumary == false) a.y = yGo;
+     Thread.sleep(a.speed);
+     System.out.println(a.rol + " A "+ a.speed + "ms de velocidad");
+    if(a.x == xGo && a.y == yGo){ 
+        a.flagmove = false; 
+        a.pointer = 0;
+        a.move = "";
+        break;
+    
+    }
+    else {
+      
+    // System.out.println("Moving -> "+a.rol);
+     /*Condicionales para X */   
+    if(a.x == xGo);
+    else {
+    if(sumarx) a.x = a.x + 1;
+    else a.x --;
+    }
+    
+    /*Condicionales para Y*/
+    
+   if(a.y == yGo);
+   else{
+   if(sumary) a.y++;
+   else a.y --;
+   }
+    }
+    }
+     catch(Exception e){}   
+    }
+    
+
+    
+    }
+    
+ public void toStrike(Agents a)
+    {
+    a.pause = false;
+    boolean sumarx=false;
+    boolean sumary=false;
+    
+    int up;
+    
+    System.out.println("to first");
+    int xGo,yGo;
+    yGo = Agents.CATCHER[1];
+    xGo = Agents.CATCHER[0] + 20;
+    if(a.x < xGo) sumarx = true;
+    if(a.y < yGo) sumary = true;
+     if(!a.rol.equals("Ball"))
+    {
+     String [] sm = this.getTypeOfMove(a,xGo,yGo);
+     a.move = sm[0];
+     a.pointer = Integer.parseInt(sm[1]);
+     a.flagmove = true;
+     System.out.println("*******  "+sm[0]+" **************");
+        
+    }
+    while(a.pause == false)
+    {
+     try{
+     if(a.x > xGo && sumarx) a.x = xGo;
+     if(a.x < xGo && sumarx == false) a.x =  xGo;
+     if(a.y > yGo && sumary) a.y = yGo;
+     if(a.y < yGo && sumary == false) a.y = yGo;
+     Thread.sleep(a.speed);
+     System.out.println(a.rol + " A "+ a.speed + "ms de velocidad");
+    if(a.x == xGo && a.y == yGo){ 
+        a.flagmove = false; 
+        a.pointer = 0;
+        a.move = "";
+        break;
+    
+    }
+    else {
+      
+    // System.out.println("Moving -> "+a.rol);
+     /*Condicionales para X */   
+    if(a.x == xGo);
+    else {
+    if(sumarx) a.x = a.x + 1;
+    else a.x --;
+    }
+    
+    /*Condicionales para Y*/
+    
+   if(a.y == yGo);
+   else{
+   if(sumary) a.y++;
+   else a.y --;
+   }
+    }
+    }
+     catch(Exception e){}   
+    }
+    
+
+    
+    }
+    
  
  public void trhowBall(Agents ball,int [] coords,int opc,int [] something)
  {
  if(opc == 10) ball.initialPosition(1);
+    
 // if(opc == 11 ){ Agents btt = ball.getAgent("Batter"); btt.flag = true; btt.speed = 30;toFirstBase(btt);} 
  if(coords == Agents.FIRSTBASEMAN) toFirstBase(ball);
  if(coords == Agents.SECONDBASEMAN) toSecondBase(ball);
@@ -467,8 +598,10 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
  if(coords == Agents.PITCHER) toPitcherGo(ball,something[0],something[1]);
  if(coords == Agents.BATTER) toHome(ball);
  if(opc == 10 ) {ball.getAgent("Batter").flag = true; toHome(ball);}
- 
+ if(opc == 2) {this.toStrike(ball);}
  }
+ 
+ 
  
  /**
   @param a it's the controller*/
@@ -509,7 +642,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
      
 }
  
-public String [] getTypeOfMove(Agents a,int xGoal,int yGoal)
+public  String [] getTypeOfMove(Agents a,int xGoal,int yGoal)
 {
 System.out.println(a.x+ ", "+a.y+" -> "+xGoal+", "+yGoal);
 if(xGoal > yGoal)

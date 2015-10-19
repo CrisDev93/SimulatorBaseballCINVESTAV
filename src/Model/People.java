@@ -107,7 +107,8 @@ System.out.println("Dato: "+playersnumber);
                     
                if(playercurrent > 0){ newagent.team = 2;
                newagent.rol = "wait";
-               newagent.initialPosition(1);}
+               newagent.initialPosition(1);
+               }
                 }
               
                 

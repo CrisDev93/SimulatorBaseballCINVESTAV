@@ -14,8 +14,11 @@ import static Model.Agents.PITCHER;
  *
  * @author Cristian Michel
  */
+
+
 public class Escenarios extends Movements{
-    
+
+  public  Strike strike = new Strike();
     /**
     @param a  variable Agents that represent the controler agents and it's for get and Access to the methods of Agents class
     */

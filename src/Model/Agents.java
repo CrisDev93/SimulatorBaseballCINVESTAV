@@ -36,7 +36,8 @@ public class Agents implements Runnable {
 
     // Primitivos 
     public  int leftconcert =0,inconcert,ALocation,dx,dy,x,y,type=0,team,pointer=0,destination=0,speed = 0,xTemp,yTemp,sinalRule = 0;
-    public boolean pause,flag = false,alive,permitActivity,flagmove = false,turn = false,evento = false,nextStack=true,inMovement = false,ballflag = false,goal=false;
+    public boolean pause,flag = false,alive,permitActivity,flagmove = false,turn = false,evento = false,inMovement = false,ballflag = false,goal=false;
+    public static boolean nextStack=false;
     public static boolean keyball = false;
     public static int[] PITCHER = {523,475},CATCHER={515,545},BATTER={515,525},FIRSTBASEMAN={640,460},SECONDBASEMAN={527,400},
             THIRDBASEMAN={403,465},SHORTSTOP,LEFTFIELDER={351,334},CENTERFIELDER={515,313},RIGHTFIELDER={687,323};
@@ -428,7 +429,7 @@ tmp = tmp + ru.charAt(i);
  if(this.destination  == -1)
  {
  System.out.println("YES -1");
-
+this.speed = 40;
  if(r.nextBoolean()){
  System.out.println(rol + "CatchBallBeforeField");
 out.CatchBallBeforeField(this);
@@ -441,7 +442,12 @@ destination = 0;
 out.getBallAndThrow(this, 1);
 destination = 0;
  }
- 
+ Agents runner = this.getAgent("Batter");
+if(this.rol.equals("First Baseman")) this.movements.toFirstBase(this);
+if(this.rol.equals("Second Baseman")) this.movements.toSecondBase(this);
+if(this.rol.equals("Third Baseman")) this.movements.toThirdBase(this);
+runner.out.outGameBatter(runner);
+nextStack = false;
  }
  
  if(this.destination  == -2)
@@ -456,7 +462,27 @@ destination = 0;
  
  
  }
+ private synchronized void checkRulesReleased(Agents w)
+ {
+ String nr = w.getRol();
+ if(!nr.equals(""))
+ {
+ w.rol = nr;
+ if(w.rol.equals("Batter"))
+ {
+ w.pause = false;
+ w.movements.toHome(w);
+ }
+ }
+ }
 public void moveAgents(int destinationl,int cont) throws InterruptedException {
+    
+    if(this.rol.equals("wait"))
+    {
+    checkRulesReleased(this);
+    
+    }
+    
     
     if(this.rol.equals("controler"))
     {
@@ -469,7 +495,10 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
         p = ponche 
         
         */
-        Thread.sleep(3000);
+       while(nextStack) Thread.sleep(3000);
+       
+       Thread.sleep(3000);
+        nextStack = true;
         Rule nr = this.rules.getRule();
         System.out.println("REGLA ACTUAL : "+nr.escenario);
         if(nr != null)
@@ -478,7 +507,7 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
         { 
         escenarios.bola(this);
          System.out.println(this.rol);
-         
+         nextStack = false;
             
         }
         if(nr.escenario.equals("co") && fi ==0)
@@ -495,12 +524,20 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
          tmpb.destination = -2;
         // tmpb.speed = 40;
          }
+         else nextStack = false;
         Agents bt = getAgent("Batter");
         bt.speed = bt.r.nextInt(70 - 30) + 30;
         getAgent("Ball").speed = bt.speed / 6;
         escenarios.contactoPelota(this);
+        
         }
         
+        // Si el guion marca un Strike ...
+        if(nr.escenario.equals("s"))
+        {
+        escenarios.strike.makeAStrike(this);
+        nextStack = false;
+        }
         
         }
     

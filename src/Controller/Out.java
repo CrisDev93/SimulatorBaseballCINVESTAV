@@ -151,5 +151,21 @@ public class Out {
    
    }
    
-    
+   
+   
+ 
+       
+   
+  public void outGameBatter(Agents batter)
+  {
+  batter.releaseRol(batter.rol);
+  try{
+  Thread.sleep(2000);
+  }
+  catch(Exception e ){ e.printStackTrace();}
+   batter.rol = "wait";
+
+  batter.movements.toWaitZone(batter);
+  
+  }
 }
