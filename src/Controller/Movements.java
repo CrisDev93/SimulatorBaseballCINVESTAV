@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author Cristian Michel
- */
+ */ 
 public class Movements {
     public boolean flag = true;
     
@@ -44,7 +44,7 @@ public class Movements {
      if(a.x == xl && a.y == yl){
          if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = true;
          a.pointer = 0;
-         a.flagmove = false;System.out.println("DONE"); break;
+         a.flagmove = false;break;
      
      }
   
@@ -88,7 +88,7 @@ public class Movements {
     int up;
     if(a.rol.equals("Ball") ) up = 1;
     else  up = 2;
-    System.out.println("to first");
+   // System.out.println("to first");
 
     if(a.x < Agents.FIRSTBASEMAN[0]) sumarx = true;
     if(a.y < Agents.FIRSTBASEMAN[1]) sumary = true;
@@ -98,19 +98,19 @@ public class Movements {
      a.move = sm[0];
      a.pointer = Integer.parseInt(sm[1]);
      a.flagmove = true;
-     System.out.println("*******  "+sm[0]+" **************");
+   //  System.out.println("*******  "+sm[0]+" **************");
         
     }
     while(a.pause == false)
     {
-    System.err.println(a.pause + " TO F " + a.rol);
+//    System.err.println(a.pause + " TO F " + a.rol);
      try{
      if(a.x > Agents.FIRSTBASEMAN[0] && sumarx) a.x = Agents.FIRSTBASEMAN[0];
      if(a.x < Agents.FIRSTBASEMAN[0] && sumarx == false) a.x = Agents.FIRSTBASEMAN[0];
      if(a.y > Agents.FIRSTBASEMAN[1] && sumary) a.y = Agents.FIRSTBASEMAN[1];
      if(a.y < Agents.FIRSTBASEMAN[1] && sumary == false) a.y = Agents.FIRSTBASEMAN[1];
      Thread.sleep(a.speed);
-     System.out.println(a.rol + " A "+ a.speed + "ms de velocidad");
+//    System.out.println(a.rol + " A "+ a.speed + "ms de velocidad");
     if(a.x == Agents.FIRSTBASEMAN[0] && a.y == Agents.FIRSTBASEMAN[1]){ 
         if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = true;
         a.flagmove = false; 
@@ -137,7 +137,7 @@ public class Movements {
    }
     }
     }
-     catch(Exception e){}   
+     catch(Exception e){e.printStackTrace();}   
     }
     
 
@@ -151,7 +151,7 @@ public class Movements {
     boolean sumary=false;
     a.speed = 40;
     
-    System.out.println("to second");
+//    System.out.println("to second");
     if(a.x < Agents.SECONDBASEMAN[0]) sumarx = true;
     if(a.y < Agents.SECONDBASEMAN[1]) sumary = true;
     if(!a.rol.equals("Ball"))
@@ -244,7 +244,7 @@ public class Movements {
    }
     }
     }
-     catch(Exception e){}   
+     catch(Exception e){e.printStackTrace();}   
     }
     
    if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
@@ -270,7 +270,7 @@ public class Movements {
 
         a.flagmove = false;
         a.pointer = 0;
-    System.out.println("DONE !");
+   // System.out.println("DONE !");
     
     break;
     }
@@ -294,7 +294,7 @@ public class Movements {
    }
     }
     }
-     catch(Exception e){}   
+     catch(Exception e){e.printStackTrace();}   
     }
     
 if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
@@ -342,7 +342,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
      double distance;
     
      distance = Math.sqrt(  (  Math.pow((ball.xTemp - agent.x),2)   +    Math.pow((ball.yTemp - agent.y),2)  )   );
-     System.out.println("-----> "+distance);
+  //   System.out.println("-----> "+distance);
  return distance;
  }
  
@@ -353,8 +353,8 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
     boolean sumarx=false;
     boolean sumary=false;
     int morex,morey;
-    morex = a.r.nextInt(25 + 15)+15;
-    morey = a.r.nextInt(90 + 30)+ 30;
+    morex = a.r.nextInt(20 + 15)+15;
+    morey = a.r.nextInt(40 + 30)+ 30;
     int [] tmp = {515,525};
     tmp[0]+= morex;
     tmp[1]+= morey;
@@ -363,9 +363,10 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
     while(a.pause == false)
     {
      try{
-     Thread.sleep(a.speed);
+     a.sleep(a.speed);
     if(a.x == tmp[0] && a.y == tmp[1]){ a.flagmove = false;
     a.pointer = 0;
+    a.pause = true;
     break;}
     else {
       if(!(a.rol.equals("Ball")|| a.rol.equals("controler")))  
@@ -390,7 +391,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
    }
     }
     }
-     catch(Exception e){}   
+     catch(Exception e){e.printStackTrace();}   
     }
     
         
@@ -420,11 +421,11 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
      
      if(a.x == xl && a.y == yl){
          if(a.rol.equals("Ball") && a.sinalRule == 1){ a.getAgent("Batter").pause = true;
-                  System.out.println("READY "+a.getAgent("Batter").rol+ " STATUS : "+a.getAgent("Batter").pause);
+         //         System.out.println("READY "+a.getAgent("Batter").rol+ " STATUS : "+a.getAgent("Batter").pause);
 
          }
 
-         a.flagmove = false;System.out.println("DONE TO PITCHER GO");a.goal = true; break;}
+         a.flagmove = false;a.goal = true; break;}
   
     else {
    //    System.out.println("Homing");
@@ -450,7 +451,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
    }
     }
     }
-     catch(Exception e){}   
+     catch(Exception e){e.printStackTrace();}   
     }
     
         
@@ -463,7 +464,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
     
     int up;
     
-    System.out.println("to first");
+  //  System.out.println("to first");
     int xGo,yGo;
     yGo = a.r.nextInt(219 - 163 ) + 163;
     xGo = a.r.nextInt(1057 - 873) + 873;
@@ -475,19 +476,19 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
      a.move = sm[0];
      a.pointer = Integer.parseInt(sm[1]);
      a.flagmove = true;
-     System.out.println("*******  "+sm[0]+" **************");
+  //   System.out.println("*******  "+sm[0]+" **************");
         
     }
     while(a.pause == false)
     {
-    System.err.println("TO WAIT ZONE" );
+   // System.err.println("TO WAIT ZONE" );
      try{
      if(a.x > xGo && sumarx) a.x = xGo;
      if(a.x < xGo && sumarx == false) a.x =  xGo;
      if(a.y > yGo && sumary) a.y = yGo;
      if(a.y < yGo && sumary == false) a.y = yGo;
      Thread.sleep(a.speed);
-     System.out.println(a.rol + " A "+ a.speed + "ms de velocidad");
+  //   System.out.println(a.rol + " A "+ a.speed + "ms de velocidad");
     if(a.x == xGo && a.y == yGo){ 
         a.flagmove = false; 
         a.pointer = 0;
@@ -514,7 +515,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
    }
     }
     }
-     catch(Exception e){}   
+     catch(Exception e){e.printStackTrace();}   
     }
     
 
@@ -529,7 +530,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
     
     int up;
     
-    System.out.println("to first");
+  //  System.out.println("to first");
     int xGo,yGo;
     yGo = Agents.CATCHER[1];
     xGo = Agents.CATCHER[0] + 20;
@@ -541,7 +542,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
      a.move = sm[0];
      a.pointer = Integer.parseInt(sm[1]);
      a.flagmove = true;
-     System.out.println("*******  "+sm[0]+" **************");
+  //   System.out.println("*******  "+sm[0]+" **************");
         
     }
     while(a.pause == false)
@@ -552,7 +553,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
      if(a.y > yGo && sumary) a.y = yGo;
      if(a.y < yGo && sumary == false) a.y = yGo;
      Thread.sleep(a.speed);
-     System.out.println(a.rol + " A "+ a.speed + "ms de velocidad");
+   //  System.out.println(a.rol + " A "+ a.speed + "ms de velocidad");
     if(a.x == xGo && a.y == yGo){ 
         a.flagmove = false; 
         a.pointer = 0;
@@ -579,14 +580,75 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
    }
     }
     }
-     catch(Exception e){}   
+     catch(Exception e){e.printStackTrace();}   
     }
     
 
     
     }
     
- 
+  public synchronized void toFoulZone(Agents a,int [] coords)
+    {
+    boolean sumarx=false;
+    boolean sumary=false;
+    
+    int up = 5;
+
+    if(a.x < coords[0]) sumarx = true;
+    if(a.y < coords[1]) sumary = true;
+    if(!a.rol.equals("Ball"))
+    {
+     String [] sm = this.getTypeOfMove(a,coords[0],coords[1]);
+     a.move = sm[0];
+     a.pointer = Integer.parseInt(sm[1]);
+     a.flagmove = true;
+   //  System.out.println("*******  "+sm[0]+" **************");
+        
+    }
+    while(a.pause == false)
+    {
+   // System.err.println(a.pause + " TO F " + a.rol);
+     try{
+     if(a.x > coords[0] && sumarx) a.x =coords[0];
+     if(a.x < coords[0] && sumarx == false) a.x =coords[0];
+     if(a.y > coords[1]&& sumary) a.y = coords[1];
+     if(a.y < coords[1] && sumary == false) a.y = coords[1];
+     Thread.sleep(a.speed);
+     //System.out.println(a.rol + " A "+ a.speed + "ms de velocidad");
+    if(a.x == coords[0] && a.y == coords[1]){ 
+        if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = true;
+        a.flagmove = false; 
+        a.pointer = 0;
+        break;
+    
+    }
+    else {
+      
+    // System.out.println("Moving -> "+a.rol);
+     /*Condicionales para X */   
+    if(a.x == coords[0]);
+    else {
+    if(sumarx) a.x = a.x + up;  
+    else a.x  = a.x - up;
+    }
+    
+    /*Condicionales para Y*/
+    
+   if(a.y == coords[1]);
+   else{
+   if(sumary) a.y++;
+   else a.y --;
+   }
+    }
+    }
+     catch(Exception e){e.printStackTrace();}   
+    }
+    
+
+    if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
+    a.flagmove = false;  
+    }
+
  public void trhowBall(Agents ball,int [] coords,int opc,int [] something)
  {
  if(opc == 10) ball.initialPosition(1);
@@ -678,4 +740,22 @@ else
     
     
 }
+
+
+
+public int [] getCoordsFoul(Agents a)
+{
+int coordsFoul[] = new int[2];  
+    if(a.r.nextBoolean())
+    {
+    coordsFoul[0] = a.r.nextInt(400 - 80 ) + 80;
+    coordsFoul[1] = 400 + (coordsFoul[0]  - 50);
+    }
+    else{
+    coordsFoul[0] = a.r.nextInt(1100 - 650 ) + 650;
+    coordsFoul[1] = 400 + (coordsFoul[0]  - 650);
+    }
+return coordsFoul;
+}
+
 }

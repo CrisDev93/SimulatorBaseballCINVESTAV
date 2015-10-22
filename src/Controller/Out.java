@@ -37,7 +37,7 @@ public class Out {
 
      Thread.sleep(a.speed);
     if(a.x == b.xTemp && a.y == b.yTemp){ a.flagmove = false;
-    System.out.println("DONE !");
+  //  System.out.println("DONE !");
     
     break;
     }
@@ -82,7 +82,7 @@ public class Out {
    public void getBallAndThrow(Agents a,int pass)
    {
        
-       System.out.println("YA LLEGUE A GET BALL AND THROW");
+  //     System.out.println("YA LLEGUE A GET BALL AND THROW");
     int xTemp,yTemp;
     boolean sumarx=false;
     boolean sumary=false;
@@ -104,7 +104,7 @@ public class Out {
    // System.out.println("gonna for "+xTemp+","+yTemp);
      Thread.sleep(a.speed);
     if(a.x == xTemp && a.y == yTemp){ a.flagmove = false;
-    System.out.println("DONE BEST AGENT GOAL !");
+   // System.out.println("DONE BEST AGENT GOAL !");
     
     break;
     }
@@ -142,7 +142,7 @@ public class Out {
    }
     CatchBallBeforeField(a);
     int [] obj  = b.movements.getNextBaseClose(a);
-    System.out.println("EL MÁS OPTIMO: "+obj[0]+","+obj[1]+" y FirstBaseman es: "+Agents.FIRSTBASEMAN[0]+","+Agents.FIRSTBASEMAN[1]);
+  //  System.out.println("EL MÁS OPTIMO: "+obj[0]+","+obj[1]+" y FirstBaseman es: "+Agents.FIRSTBASEMAN[0]+","+Agents.FIRSTBASEMAN[1]);
  b.speed = b.speedCalculated(obj);
  b.movements.trhowBall(b,obj, 0, null);
    

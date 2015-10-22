@@ -31,7 +31,7 @@ import Controller.Out;
  *
  * @author Edy
  */
-public class Agents implements Runnable {
+public class Agents extends Thread {
     
 
     // Primitivos 
@@ -48,7 +48,7 @@ public class Agents implements Runnable {
     String filename = "img/rguy3";
     public ArrayList travel;
     public MonitorGeneral m;
-    public String name,rol,band,move="";
+    public String name,rol,band,move="",tipo="";
     public  Random r;
     public LinkedList<Agents> e = new LinkedList<Agents>();
     public ArrayList iAgents = new ArrayList();
@@ -63,7 +63,7 @@ public class Agents implements Runnable {
     public static RulesReader rr = new RulesReader();
     public Movements movements = new Movements();
     public static Escenarios escenarios = new Escenarios();
-    Out out = new Out();
+    public Out out = new Out();
     int fi = 0;
     static int cout = 0;
     public Agents() {   
@@ -158,8 +158,20 @@ for (int i = 0; i < rows; i++)
     return "wait";
     }
     }
-    
-    public void releaseRol(String rol){
+    public boolean isEmptyRols()
+    {
+    synchronized(rols)
+    {
+    for(int i = 0 ; i<rols.length;i++)
+    {
+    if(rols[i] != null) {
+        System.out.println("Soy un rol almacenado "+rols[i]);
+        return true;}
+    }
+    }
+    return false;
+    }
+    public void releaseRol(String rol){  
     synchronized(rols){
     for (int i=0;i<rols.length;i++){
     if(rols[i] == null){
@@ -224,7 +236,7 @@ for (int i = 0; i < rows; i++)
         }
          if(move.equals("left")){
              sw ++;
-                         System.out.println("POINTER "+pointer + " STATUS "+flagmove);
+                      //   System.out.println("POINTER "+pointer + " STATUS "+flagmove);
 
              if(this.flagmove){
           
@@ -247,7 +259,9 @@ for (int i = 0; i < rows; i++)
                  try{
                 g.drawImage(this.sprites[pointer], x, y, null);
                  }
-                 catch(Exception e){System.err.println(rol+" No tiene sprite");}
+                 catch(Exception e){
+                     System.out.println("ESTO SPRITE :  "+this.sprites);
+                     System.err.println(rol+" No tiene sprite");}
              //   System.out.println(x+","+y);
             }  
            else { g.drawImage(this.sprites[1], x, y, null);
@@ -316,12 +330,13 @@ for (int i = 0; i < rows; i++)
      *
      */
     public Agents getAgent(String rol){
-       
+    synchronized(players)   {
     for(Agents ag: players){
     
     if(ag.rol.equals(rol)) return ag;
     }
     return null;
+    }
     }
     public  void communicationC(String file){
           try {
@@ -356,7 +371,11 @@ for (int i = 0; i < rows; i++)
     public void initialPosition(int location) {
        // System.out.println("ASGINADOOOOOOOOOOOOO "+rol);
           if(location == 1)  {this.x = PITCHER[0]; this.y = PITCHER[1];}
-          if(location == 2 ) {this.x = BATTER[0]; this.y = BATTER[1];}
+          if(location == 2 ) {
+              
+              this.x = BATTER[0]; this.y = BATTER[1];
+          System.out.println("Se pone en posicion y tiene esprite : "+this.sprites);
+          }
           if(location == 3 ) {this.x = CATCHER[0]; this.y = CATCHER[1];}
           if(location == 4)   {this.x = FIRSTBASEMAN[0];  this.y=FIRSTBASEMAN[1];}
           if(location == 5)   {this.x = SECONDBASEMAN[0];  this.y=SECONDBASEMAN[1];}
@@ -428,17 +447,17 @@ tmp = tmp + ru.charAt(i);
  }
  if(this.destination  == -1)
  {
- System.out.println("YES -1");
+// System.out.println("YES -1");
 this.speed = 40;
  if(r.nextBoolean()){
- System.out.println(rol + "CatchBallBeforeField");
+ //System.out.println(rol + "CatchBallBeforeField");
 out.CatchBallBeforeField(this);
 destination = 0;
 
  }
  else {
  
- System.out.println(rol + "getBallAndThrow");    
+// System.out.println(rol + "getBallAndThrow");    
 out.getBallAndThrow(this, 1);
 destination = 0;
  }
@@ -452,7 +471,7 @@ nextStack = false;
  
  if(this.destination  == -2)
  {
-  System.out.println("YES -2");
+ // System.out.println("YES -2");
  Agents tmpA = this.movements.getBestAgent(this.getAgent("Ball"));
  tmpA.speed = this.getAgent("Batter").speed / 2;
 
@@ -460,20 +479,36 @@ nextStack = false;
  this.destination = 0;
  }
  
- 
+ if(this.destination == - 3)
+  {
+ out.outGameBatter(this);
+         
+  }
  }
  private synchronized void checkRulesReleased(Agents w)
  {
+ try{
  String nr = w.getRol();
- if(!nr.equals(""))
+ if( nr.equals("")  == false && nr.equals("wait") == false )
  {
  w.rol = nr;
- if(w.rol.equals("Batter"))
- {
- w.pause = false;
- w.movements.toHome(w);
+System.out.println("Nuevo Rol Cachado" + nr);
+ if(w.rol.equals("Batter"))w.initialPosition(2);
+ if(w.rol.equals("First Baseman"))w.initialPosition(4);
+ if(w.rol.equals("Second Baseman"))w.initialPosition(5);
+ if(w.rol.equals("Third Baseman"))w.initialPosition(6);
+ if(w.rol.equals("Pitcher"))w.initialPosition(1);
+ if(w.rol.equals("Catcher"))w.initialPosition(3);
+ if(w.rol.equals("Left Fielder")) w.initialPosition(7);
+ if(w.rol.equals("Center Fielder")) w.initialPosition(8);
+ if(w.rol.equals("Right Fielder")) w.initialPosition(9);
+ 
+ w.speed = 30;
+ w.move = "up";
+ w.flagmove = false;
  }
  }
+ catch(Exception e){e.printStackTrace();}
  }
 public void moveAgents(int destinationl,int cont) throws InterruptedException {
     
@@ -495,18 +530,19 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
         p = ponche 
         
         */
-       while(nextStack) Thread.sleep(3000);
+       while(nextStack) this.sleep(3000);
        
-       Thread.sleep(3000);
+       this.sleep(3000);
         nextStack = true;
         Rule nr = this.rules.getRule();
-        System.out.println("REGLA ACTUAL : "+nr.escenario);
+        System.out.println("REGLA ACTUAL : "+nr.escenario); 
         if(nr != null)
         {
-        if(nr.escenario.equals("b") && fi == 0)
+        if(nr.escenario.equals("b"))
         { 
+        
         escenarios.bola(this);
-         System.out.println(this.rol);
+      //   System.out.println(this.rol);
          nextStack = false;
             
         }
@@ -529,7 +565,6 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
         bt.speed = bt.r.nextInt(70 - 30) + 30;
         getAgent("Ball").speed = bt.speed / 6;
         escenarios.contactoPelota(this);
-        
         }
         
         // Si el guion marca un Strike ...
@@ -538,7 +573,24 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
         escenarios.strike.makeAStrike(this);
         nextStack = false;
         }
-        
+        if(nr.escenario.equals("f"))
+        {
+        Agents ball = this.getAgent("Ball");
+        ball.pause = false;
+        escenarios.foul(ball);
+         nextStack = false;
+        }
+        if(nr.escenario.equals("p"))
+        {
+        Agents batter = this.getAgent("Batter");
+        out.outGameBatter(batter);
+        nextStack = false;
+        }
+        if(nr.escenario.equals("ce"))
+        {
+        escenarios.changeOfTeam(this);
+        nextStack = false;
+        }
         }
     
     }

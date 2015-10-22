@@ -52,12 +52,11 @@ public class People extends Agents {
                    tmp.permitActivity = true;
                    tmp.rules = new Rules();
                    
-                   tmp.players.add(tmp);
                    iAgents.add(tmp);
                    this.addAgent(tmp);
         setPublic();
        
- System.out.println("PEOPLE CREATED ...");
+ //System.out.println("PEOPLE CREATED ...");
     }
 public People(){}
     /**
@@ -72,7 +71,7 @@ int playersnumber = 18;
 
  //int x1 =10;
 boolean t1f=true,t2f=false;
-System.out.println("Dato: "+playersnumber);
+//System.out.println("Dato: "+playersnumber);
         for (int playercurrent = 0; playercurrent < playersnumber ; playercurrent++) {
          
                  Agents newagent = null;
@@ -86,8 +85,9 @@ System.out.println("Dato: "+playersnumber);
                   newagent.initialPosition(2);
 
                   newagent.team = 2;
+                  newagent.tipo = "ofensivo";
                   newagent.permitActivity = true;
-                  System.err.println("Creado "+newagent.rol+" Coordenadas: "+newagent.x+ " , "+newagent.y);
+             //     System.err.println("Creado "+newagent.rol+" Coordenadas: "+newagent.x+ " , "+newagent.y);
                 } 
                 if(playercurrent>=1 & playercurrent < 10){
                 newagent.rol = newagent.getRol( );
@@ -101,12 +101,13 @@ System.out.println("Dato: "+playersnumber);
                 if(newagent.rol.equals("Pitcher")) newagent.initialPosition(1);
                 
                 newagent.team = 1;
-                
+                newagent.tipo = "defensivo";
                 }
                 else{
                     
                if(playercurrent > 0){ newagent.team = 2;
                newagent.rol = "wait";
+               newagent.tipo = "ofensivo";
                newagent.initialPosition(1);
                }
                 }
