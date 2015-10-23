@@ -99,6 +99,7 @@ public class Escenarios extends Movements{
     
   public void changeOfTeam(Agents a)  
   {
+      //
       try{
   ArrayList<Agents> ofensivos = new ArrayList<Agents>();   
   ArrayList<Agents> defensivos = new ArrayList<Agents>();   
