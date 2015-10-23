@@ -45,6 +45,7 @@ public class Agents extends Thread {
     //Objetos
     public static ArrayList<Agents> players = new ArrayList<Agents>();
     private Image image;
+    public int ChangeSignal = 0;
     String filename = "img/rguy3";
     public ArrayList travel;
     public MonitorGeneral m;
@@ -52,7 +53,7 @@ public class Agents extends Thread {
     public  Random r;
     public LinkedList<Agents> e = new LinkedList<Agents>();
     public ArrayList iAgents = new ArrayList();
-    static String [] rols = {"Batter","Pitcher","Catcher","First Baseman","Second Baseman","Third Baseman","Short Stop","Left Fielder","Center Fielder","Right Fielder"};
+    public static String [] rols = {"Batter","Pitcher","Catcher","First Baseman","Second Baseman","Third Baseman","Short Stop","Left Fielder","Center Fielder","Right Fielder"};
     public static String rulecurrent="";
     BufferedImage img,bigImg; 
     BufferedImage[] sprites;
@@ -65,7 +66,7 @@ public class Agents extends Thread {
     public static Escenarios escenarios = new Escenarios();
     public Out out = new Out();
     int fi = 0;
-    static int cout = 0;
+    public static int cout = 0,waitLock=0,changeLock=0;
     public Agents() {   
 
     }
@@ -116,13 +117,13 @@ public class Agents extends Thread {
     public void makeSprits()
     {
         try{
-            
+           
         if(this.team==1)bigImg = ImageIO.read(new File("src/simulador/img/equipo1Bat.png"));
         if(this.team==2)bigImg = ImageIO.read(new File("src/simulador/img/equipo2Bat.png"));
       
        //  System.err.print("EQUIPO : "+this.team);
          
-final int width = bigImg.getWidth()/12;
+ final int width = bigImg.getWidth()/12;
 final int height = bigImg.getHeight()/8;
 final int rows = 4;
 final int cols = 3;
@@ -142,11 +143,11 @@ for (int i = 0; i < rows; i++)
 }   
         }
         catch(Exception e){
-        e.printStackTrace();
+        System.err.println("CAUSANTE --->"+ this.rol);
         }
     }
     public String getRol(){
-    synchronized(rols){
+   
     for(int i = 0; i<rols.length;i++)
     {
     if(rols[i] != null){
@@ -156,18 +157,18 @@ for (int i = 0; i < rows; i++)
     }
     }
     return "wait";
-    }
+    
     }
     public boolean isEmptyRols()
     {
-    synchronized(rols)
-    {
+   
     for(int i = 0 ; i<rols.length;i++)
     {
     if(rols[i] != null) {
         System.out.println("Soy un rol almacenado "+rols[i]);
-        return true;}
+        return true;
     }
+    
     }
     return false;
     }
@@ -283,7 +284,12 @@ for (int i = 0; i < rows; i++)
           if(this.rol.equals("Catcher")) g.drawImage(this.sprites[pointer], x, y, null);
           //if(this.rol.equals("Batter")) g.drawImage(this.sprites[this.pointer], x, y, null);
           if(this.rol.equals("First Baseman")) g.drawImage(this.sprites[this.pointer], x, y, null);
-          
+          if(this.rol.equals("Second Baseman")) g.drawImage(this.sprites[this.pointer], x, y, null);
+          if(this.rol.equals("Third Baseman")) g.drawImage(this.sprites[this.pointer], x, y, null);
+          if(this.rol.equals("Short Stop")) g.drawImage(this.sprites[this.pointer], x, y, null);
+          if(this.rol.equals("Pitcher")) g.drawImage(this.sprites[this.pointer], x, y, null);
+
+
         this.e = f;
                 //  System.out.println("Voy a dibujar a : "+rol+" en ->"+x+","+y);
 
@@ -383,7 +389,7 @@ for (int i = 0; i < rows; i++)
           if(location == 7)   {this.x= LEFTFIELDER[0]; this.y = LEFTFIELDER[1];}
           if(location == 8)   {this.x= CENTERFIELDER[0]; this.y = CENTERFIELDER[1];} 
           if(location == 9)   {this.x= RIGHTFIELDER[0]; this.y =  RIGHTFIELDER[1];}
-          
+          if(location == 10)   {this.x= 0; this.y = 0;}
         
      
         if(this.rol.equals("wait")){
@@ -481,15 +487,23 @@ nextStack = false;
  
  if(this.destination == - 3)
   {
+  changeLock++;
+  this.speed = 30;
  out.outGameBatter(this);
-         
+ System.err.println("CONTADOR PARA LOCK WAIT "+changeLock);
+ destination = 0;
+ if(changeLock == 8) {
+     waitLock = 0;
+     nextStack = false;
+     changeLock = 0;
+ }
   }
  }
  private synchronized void checkRulesReleased(Agents w)
  {
  try{
  String nr = w.getRol();
- if( nr.equals("")  == false && nr.equals("wait") == false )
+ if( nr.equals("")  == false  && nr.equals("wait") == false && waitLock == 0)
  {
  w.rol = nr;
 System.out.println("Nuevo Rol Cachado" + nr);
@@ -546,10 +560,10 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
          nextStack = false;
             
         }
-        if(nr.escenario.equals("co") && fi ==0)
+        if(nr.escenario.equals("co"))
         {
             // QUEDE ACA EN ELEGIR AL MEJOR AGENTE EN BASE A LAS COORDENADAS TEMPORALES DEL BALON
-         if( rules.nextRule().escenario.equals("o") && fi == 0)
+         if( rules.nextRule().escenario.equals("o"))
          {
          fi = 1;
          cout++;
@@ -589,7 +603,7 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
         if(nr.escenario.equals("ce"))
         {
         escenarios.changeOfTeam(this);
-        nextStack = false;
+       
         }
         }
     

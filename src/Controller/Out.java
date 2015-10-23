@@ -156,7 +156,7 @@ public class Out {
  
        
    
-  public void outGameBatter(Agents batter)
+  public synchronized void outGameBatter(Agents batter)
   {
   batter.releaseRol(batter.rol);
   try{
@@ -164,8 +164,6 @@ public class Out {
   }
   catch(Exception e ){ e.printStackTrace();}
    batter.rol = "wait";
-
   batter.movements.toWaitZone(batter);
-  
   }
 }

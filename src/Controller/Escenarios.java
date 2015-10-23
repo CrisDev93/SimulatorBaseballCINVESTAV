@@ -102,36 +102,90 @@ public class Escenarios extends Movements{
       try{
   ArrayList<Agents> ofensivos = new ArrayList<Agents>();   
   ArrayList<Agents> defensivos = new ArrayList<Agents>();   
-  //Recorro el arreglo de jugadores y los voy separando en ofensivos y defensivos
-
+  
+  Agents.waitLock = 1;
+   
+  // separamos en grupos a los ofensivos y a los defensivos
   for(Agents agente : a.players)
   {
+  if(agente.rol.equals("Ball") || agente.rol.equals("controler"));
+  else {
   if(agente.tipo.equals("ofensivo")) ofensivos.add(agente);
-  else defensivos.add(agente);
+  else {
+  defensivos.add(agente);
   }
-   // ahora libero los roles de los que antes eran defensivos
-  for(Agents defensivo: defensivos) 
-  {   
-      if(defensivo.rol.equals("Ball") || defensivo.rol.equals("controler"));
-      else{
-          System.out.println("Libere a "+defensivo.rol);
-          defensivo.releaseRol(defensivo.rol);}
-     
   }
-  while(a.isEmptyRols()){ 
-      System.out.println(a.isEmptyRols());
-      a.sleep(1000);}
-  // itero el arreglo de defensivos y les cambio el tipo
-  for(Agents ofensivo : ofensivos) ofensivo.tipo = "defensivo";
-  //itero el arreglo de ofensivos y los cambio por defensivos
-  for(Agents defensivo: defensivos) defensivo.tipo = "ofensivo";
   
-  // itero nuevamente los roles que antes eran defensivos para mandarlos a la zona de espera
-  for(Agents defensivo: defensivos)  defensivo.destination = -3;
+  }
+  //ofensiva == batter
+  int contador = 0;
+  for(Agents ofensivo: ofensivos) {
+      contador ++;
+  ofensivo.tipo = "defensivo";
+  switch(contador){
+      case 1:{
+      ofensivo.rol = "Pitcher";
+      ofensivo.pointer = 9;
+      ofensivo.initialPosition(1);
+      }break;
+       case 2:{
+      ofensivo.rol = "Catcher";
+      ofensivo.initialPosition(3);
+      }break;
+      case 3:{
+      ofensivo.rol = "First Baseman";
+      ofensivo.initialPosition(4);
+      }break;
+     case 4:{
+      ofensivo.rol = "Second Baseman";
+      ofensivo.initialPosition(5);
+      }break;     
+      case 5:{
+      ofensivo.rol = "Third Baseman";
+      ofensivo.initialPosition(6);
+      }break;
+      case 6:{
+      ofensivo.rol = "Right Fielder";
+      ofensivo.initialPosition(9);
+      }break;
+      case 7:{
+      ofensivo.rol = "Left Fielder";
+      ofensivo.initialPosition(7);
+      }break;
+     case 8:{
+      ofensivo.rol = "Center Fielder";
+      ofensivo.initialPosition(8);
+      }break;
+     case 9:{
+      ofensivo.rol = "Short Stop";
+      ofensivo.initialPosition(10);
+      }break;
   
   
+  }
+  }
+   for(int i = 0; i<Agents.rols.length;i++)
+   {
+       Agents.rols[i] = "";
+   }
+   int count = 0;
+  for(Agents defensivo: defensivos) {
+  count++;
+  if(count == 1)
+  {
+  defensivo.tipo = "ofensivo";
+  defensivo.rol = "Batter";
+  defensivo.initialPosition(2);
+  }
+  else{
+  defensivo.tipo = "ofensivo";
+  defensivo.destination = -3;
+  }
+  }
+ 
       }
       catch(Exception e){e.printStackTrace();}
+
   }
   
   

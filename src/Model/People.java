@@ -53,6 +53,7 @@ public class People extends Agents {
                    tmp.rules = new Rules();
                    
                    iAgents.add(tmp);
+                   tmp.players.add(tmp);
                    this.addAgent(tmp);
         setPublic();
        
