@@ -23,7 +23,7 @@ public class Escenarios extends Movements{
     /**
     @param a  variable Agents that represent the controler agents and it's for get and Access to the methods of Agents class
     */
-    public void contactoPelota(Agents a)
+    public void contactoPelota(Agents a,boolean isHit)
     {
     //Some instances of Agents class for get an especific agents access
     Agents pitcher,batter,balon;
@@ -34,12 +34,12 @@ public class Escenarios extends Movements{
     pitcher = a.getAgent("Pitcher");
     batter  = a.getAgent("Batter");
     balon    = a.getAgent("Ball");
-    
+    balon.pause = false;
      trhowBall(balon,BATTER,10,null);
      
  
      
-     ry = a.r.nextInt(60 - 30 ) + 30;
+     ry = a.r.nextInt(100 - 70 ) + 70;
      rx = a.r.nextInt(40 - 10 )+ 10;
      
      rDestionation = a.r.nextBoolean();
@@ -59,7 +59,9 @@ public class Escenarios extends Movements{
      balon.yTemp = nco[1];
    //  System.out.println("BALLL COORDS TMP "+balon.xTemp+","+balon.yTemp);
      
-     batter.destination = 1;
+     if(isHit)batter.destination = 2;
+     else batter.destination = 1;
+     balon.pause = false;
      trhowBall(balon,PITCHER,11,nco);
      
      
@@ -103,7 +105,7 @@ public class Escenarios extends Movements{
       try{
   ArrayList<Agents> ofensivos = new ArrayList<Agents>();   
   ArrayList<Agents> defensivos = new ArrayList<Agents>();   
-  
+  Agents.currentnumber = 0;
   Agents.waitLock = 1;
    
   // separamos en grupos a los ofensivos y a los defensivos
@@ -176,9 +178,12 @@ public class Escenarios extends Movements{
   {
   defensivo.tipo = "ofensivo";
   defensivo.rol = "Batter";
+  defensivo.number  = Agents.currentnumber + 1;
+  Agents.currentnumber++;
   defensivo.initialPosition(2);
   }
   else{
+  System.out.println("VAN: "+count);
   defensivo.tipo = "ofensivo";
   defensivo.destination = -3;
   }

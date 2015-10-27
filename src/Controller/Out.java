@@ -105,7 +105,7 @@ public class Out {
      Thread.sleep(a.speed);
     if(a.x == xTemp && a.y == yTemp){ a.flagmove = false;
    // System.out.println("DONE BEST AGENT GOAL !");
-    
+    flag = false;
     break;
     }
     else {

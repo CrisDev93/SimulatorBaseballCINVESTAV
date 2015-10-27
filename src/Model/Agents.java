@@ -27,6 +27,7 @@ import Controller.Movements;
 import Controller.Rules;
 import Controller.RulesReader;
 import Controller.Out;
+import java.util.Iterator;
 /**
  *
  * @author Edy
@@ -35,13 +36,14 @@ public class Agents extends Thread {
     
 
     // Primitivos 
-    public  int leftconcert =0,inconcert,ALocation,dx,dy,x,y,type=0,team,pointer=0,destination=0,speed = 0,xTemp,yTemp,sinalRule = 0;
+    public  int leftconcert =0,inconcert,ALocation,dx,dy,x,y,type=0,team,pointer=0,destination=0,speed = 0,xTemp,yTemp,sinalRule = 0,number;
+    public static int currentnumber = 0;
     public boolean pause,flag = false,alive,permitActivity,flagmove = false,turn = false,evento = false,inMovement = false,ballflag = false,goal=false;
     public static boolean nextStack=false;
     public static boolean keyball = false;
     public static int[] PITCHER = {523,475},CATCHER={515,545},BATTER={515,525},FIRSTBASEMAN={640,460},SECONDBASEMAN={527,400},
             THIRDBASEMAN={403,465},SHORTSTOP,LEFTFIELDER={351,334},CENTERFIELDER={515,313},RIGHTFIELDER={687,323};
-    
+    public static Agents bases [] = new Agents[4]; 
     //Objetos
     public static ArrayList<Agents> players = new ArrayList<Agents>();
     private Image image;
@@ -66,7 +68,8 @@ public class Agents extends Thread {
     public static Escenarios escenarios = new Escenarios();
     public Out out = new Out();
     int fi = 0;
-    public static int cout = 0,waitLock=0,changeLock=0;
+    public static int cout = 0,waitLock=0;
+    public static Integer changeLock=0;
     public Agents() {   
 
     }
@@ -172,6 +175,7 @@ for (int i = 0; i < rows; i++)
     }
     return false;
     }
+    @SuppressWarnings("SynchronizeOnNonFinalField")
     public void releaseRol(String rol){  
     synchronized(rols){
     for (int i=0;i<rols.length;i++){
@@ -431,24 +435,7 @@ tmp = tmp + ru.charAt(i);
  }
  if(this.destination == 2)
  {
-   flag = true; 
-   speed = 30;
-   this.movements.toSecondBase(this);
-   destination = 0;
-   speed = 40;
- }
- if(this.destination == 3)
- {
-   flag = true; 
-   speed = 30;
-   this.movements.toThirdBase(this);
-   destination = 0;
- }
- if(this.destination == 4)
- {
-   flag = true; 
-   speed = 30;
-   this.movements.toHome(this);
+   changeBases();
    destination = 0;
  }
  if(this.destination  == -1)
@@ -467,6 +454,7 @@ destination = 0;
 out.getBallAndThrow(this, 1);
 destination = 0;
  }
+
  Agents runner = this.getAgent("Batter");
 if(this.rol.equals("First Baseman")) this.movements.toFirstBase(this);
 if(this.rol.equals("Second Baseman")) this.movements.toSecondBase(this);
@@ -474,29 +462,47 @@ if(this.rol.equals("Third Baseman")) this.movements.toThirdBase(this);
 runner.out.outGameBatter(runner);
 nextStack = false;
  }
- 
+if(destination == -4)
+{
+out.getBallAndThrow(this, 1);
+destination = 0;
+}
+ if(destination == -5)
+ {
+ Agents tmpA = this.movements.getBestAgent(this.getAgent("Ball"));
+ tmpA.speed = this.getAgent("Batter").speed;
+
+ tmpA.destination = -4;
+ destination = 0;
+ }
  if(this.destination  == -2)
  {
  // System.out.println("YES -2");
  Agents tmpA = this.movements.getBestAgent(this.getAgent("Ball"));
  tmpA.speed = this.getAgent("Batter").speed / 2;
-
+ tmpA.pause = false;
  tmpA.destination = -1;
  this.destination = 0;
  }
  
  if(this.destination == - 3)
   {
+ synchronized(Agents.changeLock){
   changeLock++;
   this.speed = 30;
+  synchronized(out)
+  {
  out.outGameBatter(this);
  System.err.println("CONTADOR PARA LOCK WAIT "+changeLock);
- destination = 0;
+  }
+ this.destination = 0;
  if(changeLock == 8) {
      waitLock = 0;
      nextStack = false;
      changeLock = 0;
  }
+ }
+
   }
  }
  private synchronized void checkRulesReleased(Agents w)
@@ -506,6 +512,8 @@ nextStack = false;
  if( nr.equals("")  == false  && nr.equals("wait") == false && waitLock == 0)
  {
  w.rol = nr;
+ w.number = currentnumber + 1;
+ currentnumber++;
 System.out.println("Nuevo Rol Cachado" + nr);
  if(w.rol.equals("Batter"))w.initialPosition(2);
  if(w.rol.equals("First Baseman"))w.initialPosition(4);
@@ -578,7 +586,8 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
         Agents bt = getAgent("Batter");
         bt.speed = bt.r.nextInt(70 - 30) + 30;
         getAgent("Ball").speed = bt.speed / 6;
-        escenarios.contactoPelota(this);
+        getAgent("Ball").pause = false;
+        escenarios.contactoPelota(this,false);
         }
         
         // Si el guion marca un Strike ...
@@ -603,7 +612,19 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
         if(nr.escenario.equals("ce"))
         {
         escenarios.changeOfTeam(this);
-       
+        
+        }
+        if(nr.escenario.equals("hi"))
+        {
+        Agents ball = this.getAgent("Ball");
+        Agents runner = this.getAgent("Batter");
+        runner.speed = 20;
+        ball.speed = runner.speed;
+        
+         Agents tmpb = this.getAgent("wait");
+         tmpb.destination = -5;
+         escenarios.contactoPelota(this,true);
+        
         }
         }
     
@@ -613,10 +634,53 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
     
     
     }
+
+public void changeBases()
+{
+Agents batter = this.getAgent("Batter");
+        int items =0;
+Stack<Rule> rulesord = new Stack<Rule>();       
+        // Ordeno los movimientos que se van a realizar
+        while(rules.nextRule().escenario.equals("a"))rulesord.push(rules.getRule());
+        //Itero todos los movimientos que se van a realizar y muevo al agente que se requiere en ese momento
+        Iterator it = rulesord.iterator();
+        while(it.hasNext())
+        {
+        Rule rc = rulesord.pop();
+        Agents agent = findForNumber(Integer.parseInt(rc.player));
+        if(rc.base == 1)
+        {
+        agent.movements.toFirstBase(agent);
+        agent.releaseRol(agent.rol);
+        agent.rol = "IF";
+        }
+        if(rc.base == 2)
+        {
+        agent.movements.toSecondBase(agent);
+        }
+        if(rc.base == 3)
+        {
+        agent.movements.toThirdBase(agent);
+        }
+        if(rc.base == 4)
+        {
+        agent.movements.toHome(agent);
+        }
+        }
+}
+public Agents findForNumber(int number)
+{
+for(Agents ag: players)
+{
+if(ag.number == number) return ag;
+}
+return null;
+}
  public void multiplePaths(int current, int destiny,int cont) throws InterruptedException {
         switch (current) {
            
             case 4: {
+                
                 this.singnals();
                 this.moveAgents(destiny,cont);
                 break;

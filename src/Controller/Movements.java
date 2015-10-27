@@ -36,11 +36,12 @@ public class Movements {
     }
     if(a.x < xl) sumarx = true;
     if(a.y < yl) sumary = true;
+     
+
     while(a.pause == false)
     {
      try{
      Thread.sleep(a.speed);
-     
      if(a.x == xl && a.y == yl){
          if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = true;
          a.pointer = 0;
@@ -420,12 +421,14 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
      Thread.sleep(a.speed);
      
      if(a.x == xl && a.y == yl){
-         if(a.rol.equals("Ball") && a.sinalRule == 1){ a.getAgent("Batter").pause = true;
+         if(a.rol.equals("Ball") && a.sinalRule == 1){a.pause = true;
+         a.goal = true;
          //         System.out.println("READY "+a.getAgent("Batter").rol+ " STATUS : "+a.getAgent("Batter").pause);
-
+         break;
          }
 
-         a.flagmove = false;a.goal = true; break;}
+         a.flagmove = false;a.goal = true; break;
+     }
   
     else {
    //    System.out.println("Homing");
@@ -649,6 +652,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
     a.flagmove = false;  
     }
 
+  //     trhowBall(balon,BATTER,10,null);
  public void trhowBall(Agents ball,int [] coords,int opc,int [] something)
  {
  if(opc == 10) ball.initialPosition(1);
@@ -658,8 +662,8 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
  if(coords == Agents.SECONDBASEMAN) toSecondBase(ball);
  if(coords == Agents.THIRDBASEMAN) toThirdBase(ball);
  if(coords == Agents.PITCHER) toPitcherGo(ball,something[0],something[1]);
- if(coords == Agents.BATTER) toHome(ball);
- if(opc == 10 ) {ball.getAgent("Batter").flag = true; toHome(ball);}
+ if(coords == Agents.BATTER) {toHome(ball);}
+ if(opc == 10 ) {ball.getAgent("Batter").flag = true;}
  if(opc == 2) {this.toStrike(ball);}
  }
  
