@@ -349,7 +349,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
  
  public void ball(Agents a)
  {
-    a.pointer = 9;
+
     a.initialPosition(1);
     boolean sumarx=false;
     boolean sumary=false;
@@ -363,12 +363,14 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
     if(a.y < tmp[1]) sumary = true;
     while(a.pause == false)
     {
+     System.out.println("La bola esta en "+a.x+","+a.y+" y su objetivo es llegar a "+tmp[0]+","+tmp[1] + " velocidad: "+a.speed);
      try{
      a.sleep(a.speed);
     if(a.x == tmp[0] && a.y == tmp[1]){ a.flagmove = false;
     a.pointer = 0;
     a.pause = true;
-    break;}
+    break;
+    }
     else {
       if(!(a.rol.equals("Ball")|| a.rol.equals("controler")))  
       {
@@ -377,7 +379,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
       } 
     // System.out.println("Moving -> "+a.rol);
      /*Condicionales para X */   
-    if(a.x == tmp[0]);
+    if(a.x == tmp[0]){System.out.println("Ya en x ball");}
     else {
     if(sumarx) a.x++;
     else a.x --;
@@ -385,7 +387,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
     
     /*Condicionales para Y*/
     
-   if(a.y == tmp[1]);
+   if(a.y == tmp[1]){System.out.println("Ya en y ball");}
    else{
    if(sumary) a.y++;
    else a.y --;
@@ -399,10 +401,11 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
     }
  
  
- public void toPitcherGo(Agents a,int xm,int ym)
+ public synchronized void toPitcherGo(Agents a,int xm,int ym)
     {
-          a.pointer = 9;
-
+    a.pointer = 9;
+    int anteriorx=0,anteriory=0;
+    int counter = 0;
     boolean sumarx=false;
     boolean sumary=false;
     int xl,yl;
@@ -415,23 +418,30 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
     if(a.y < yl) sumary = true;
     while(a.pause == false)
     {
-        
+     counter++;
   //   System.out.println(a.sinalRule);
      try{
      Thread.sleep(a.speed);
-     
+     a.x = a.evaluation(a.x,xl,sumarx);
+     a.y = a.evaluation(a.y,yl,sumary);
+
+
      if(a.x == xl && a.y == yl){
          if(a.rol.equals("Ball") && a.sinalRule == 1){a.pause = true;
          a.goal = true;
-         //         System.out.println("READY "+a.getAgent("Batter").rol+ " STATUS : "+a.getAgent("Batter").pause);
+         notifyAll();
+        System.out.println("DONE TO PITCHER GO ");
          break;
          }
 
-         a.flagmove = false;a.goal = true; break;
+         a.flagmove = false;a.goal = true; 
+         notifyAll();
+         break;
      }
   
     else {
-   //    System.out.println("Homing");
+         
+     System.out.println("Estoy en "+a.x+","+a.y+" y voy a: "+xm+","+ym);
       if(!(a.rol.equals("Ball")|| a.rol.equals("controler")))  
       {
       a.flagmove= true;
@@ -441,17 +451,33 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
      /*Condicionales para X */   
     if(a.x == xl);
     else {
-    if(sumarx) a.x++;
-    else a.x --;
+    if(sumarx) {a.x++;
+   
+    }
+    else{ a.x --;
+    
+
+    }
     }
     
     /*Condicionales para Y*/
     
    if(a.y == yl);
    else{
-   if(sumary) a.y++;
-   else a.y --;
+   if(sumary){ a.y++;
+
    }
+   
+   else {a.y --;
+  
+   }
+   }
+   
+
+  
+  
+   
+  
     }
     }
      catch(Exception e){e.printStackTrace();}   
@@ -484,7 +510,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
     }
     while(a.pause == false)
     {
-   // System.err.println("TO WAIT ZONE" );
+     System.err.println("TO WAIT ZONE" );
      try{
      if(a.x > xGo && sumarx) a.x = xGo;
      if(a.x < xGo && sumarx == false) a.x =  xGo;

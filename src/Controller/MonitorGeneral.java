@@ -71,7 +71,7 @@ public class MonitorGeneral {
             waitingagents++;
             
             semaphore.acquire();
-           
+            
             inter++;
            
             waitingagents--;

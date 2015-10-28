@@ -62,6 +62,7 @@ public class Escenarios extends Movements{
      if(isHit)batter.destination = 2;
      else batter.destination = 1;
      balon.pause = false;
+     System.out.println("Soy Ball y me voy a las coordenadas: "+balon.xTemp+ ","+balon.yTemp);
      trhowBall(balon,PITCHER,11,nco);
      
      
@@ -75,6 +76,7 @@ public class Escenarios extends Movements{
      balon    = a.getAgent("Ball");
      balon.speed = 20;
      balon.pause = false;
+     System.out.println("Velocidad previa "+balon.speed);
      balon.movements.ball(balon);
      
     

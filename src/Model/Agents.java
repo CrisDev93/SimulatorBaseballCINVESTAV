@@ -28,6 +28,7 @@ import Controller.Rules;
 import Controller.RulesReader;
 import Controller.Out;
 import java.util.Iterator;
+import java.util.concurrent.Semaphore;
 /**
  *
  * @author Edy
@@ -70,6 +71,7 @@ public class Agents extends Thread {
     int fi = 0;
     public static int cout = 0,waitLock=0;
     public static Integer changeLock=0;
+    static Semaphore semaforo = new Semaphore(1);
     public Agents() {   
 
     }
@@ -422,12 +424,12 @@ tmp = tmp + ru.charAt(i);
      
  return rul;
  }
- public void singnals()
+ public void singnals() throws InterruptedException
  {
  if(this.destination == 1)
  {
    flag = true; 
-  
+  this.speed = 5;
    this.movements.toFirstBase(this);
    destination = 0;
    
@@ -440,26 +442,34 @@ tmp = tmp + ru.charAt(i);
  }
  if(this.destination  == -1)
  {
-// System.out.println("YES -1");
+System.out.println("ESTOY ENTRANDO A DESTINATION 1 "+this.rol);
 this.speed = 40;
+ Out ot = new Out(); 
+ synchronized(ot)
+     
+ {
  if(r.nextBoolean()){
- //System.out.println(rol + "CatchBallBeforeField");
-out.CatchBallBeforeField(this);
+ System.out.println(rol + "CatchBallBeforeField");
+
+ot.CatchBallBeforeField(this);
 destination = 0;
 
  }
  else {
  
-// System.out.println(rol + "getBallAndThrow");    
-out.getBallAndThrow(this, 1);
+System.out.println(rol + "getBallAndThrow");    
+
+ot.getBallAndThrow(this, 1);
 destination = 0;
  }
-
+ }
  Agents runner = this.getAgent("Batter");
 if(this.rol.equals("First Baseman")) this.movements.toFirstBase(this);
 if(this.rol.equals("Second Baseman")) this.movements.toSecondBase(this);
 if(this.rol.equals("Third Baseman")) this.movements.toThirdBase(this);
+System.out.println("ANTES DE OUTGAMERBATTER");
 runner.out.outGameBatter(runner);
+System.out.println("DESPUES DE OUTGAMEBATTER");
 nextStack = false;
  }
 if(destination == -4)
@@ -485,27 +495,37 @@ destination = 0;
  this.destination = 0;
  }
  
- if(this.destination == - 3)
+ if(destination == - 3)
   {
- synchronized(Agents.changeLock){
+
+
+  this.speed = 25;
+ Thread.sleep(r.nextInt(3000 - 1000) + 1000);
+ Out no = new Out();
+ no.outGameBatter(this);
+
+  synchronized(changeLock)
+  {
   changeLock++;
-  this.speed = 30;
-  synchronized(out)
-  {
- out.outGameBatter(this);
- System.err.println("CONTADOR PARA LOCK WAIT "+changeLock);
   }
+ System.err.println("CONTADOR PARA LOCK WAIT "+changeLock);
+  
  this.destination = 0;
  if(changeLock == 8) {
      waitLock = 0;
      nextStack = false;
      changeLock = 0;
  }
- }
-
+ 
+ 
   }
  }
- private synchronized void checkRulesReleased(Agents w)
+ private synchronized void counterOutsField(Agents cu)
+ {
+
+ 
+ }  
+         private synchronized void checkRulesReleased(Agents w)
  {
  try{
  String nr = w.getRol();
@@ -552,11 +572,12 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
         p = ponche 
         
         */
-       while(nextStack) this.sleep(3000);
+       while(nextStack){ System.out.println("waiting");this.sleep(1000);}
        
        this.sleep(3000);
         nextStack = true;
         Rule nr = this.rules.getRule();
+        nr.escenario = "co";
         System.out.println("REGLA ACTUAL : "+nr.escenario); 
         if(nr != null)
         {
@@ -571,22 +592,28 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
         if(nr.escenario.equals("co"))
         {
             // QUEDE ACA EN ELEGIR AL MEJOR AGENTE EN BASE A LAS COORDENADAS TEMPORALES DEL BALON
-         if( rules.nextRule().escenario.equals("o"))
+            int so  = 1;
+         if( so == 1)
          {
-         fi = 1;
-         cout++;
         
+       
+        System.out.println("CALLO EN OUT");
          Agents tmpb = this.getAgent("wait");
+         System.out.println("WAIT EQUIPO: "+tmpb.rol+ " tipo "+tmpb.tipo);
          rules.getRule();
          
          tmpb.destination = -2;
+         
         // tmpb.speed = 40;
          }
-         else nextStack = false;
+         else {nextStack = false;
+          System.out.println("NO CAYO EN OUT");
+         }
         Agents bt = getAgent("Batter");
         bt.speed = bt.r.nextInt(70 - 30) + 30;
-        getAgent("Ball").speed = bt.speed / 6;
-        getAgent("Ball").pause = false;
+        Agents ball =  getAgent("Ball");
+        ball.speed = bt.speed / 6;
+        ball.pause = false;
         escenarios.contactoPelota(this,false);
         }
         
@@ -729,5 +756,27 @@ public int speedCalculated(int [] base)
  System.out.println("** Costo Pelota: "+(distanceBall * speedReturn));
     return speedReturn;
 }
+
+public int evaluation(int actual, int objetivo,boolean suma)
+{
+    if(suma)
+    {
+    if(actual > objetivo) {
+        System.out.println("Objetivo logrado ! :) ");
+        return objetivo;
+    }
+    else return actual;
+    }
+    else {
+    if(actual<objetivo){
+         System.out.println("Objetivo logrado ! :) ");
+        return objetivo;
+    }
+    else return actual;
+    }
+    
+    
+}
+
 }
  

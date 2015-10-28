@@ -22,10 +22,11 @@ public class Out {
      */
     public void CatchBallBeforeField(Agents a)
     {
-        
+    System.out.println("**** CatchBallBeforeField ****");    
     boolean sumarx=false;
     boolean sumary=false;
     Agents b = a.getAgent("Ball");
+    Agents batter = a.getAgent("Batter");
     b.sinalRule = 1;
     if(a.x < b.xTemp) sumarx = true;
     if(a.y < b.yTemp) sumary = true;
@@ -36,14 +37,15 @@ public class Out {
     //     System.out.println("gonna for "+b.xTemp+","+b.yTemp);
 
      Thread.sleep(a.speed);
-    if(a.x == b.xTemp && a.y == b.yTemp){ a.flagmove = false;
+    if(a.x == b.xTemp && a.y == b.yTemp){
+        a.flagmove = false;
   //  System.out.println("DONE !");
-    
+  batter.pause = true;
     break;
     }
     else {
   //  System.out.println("Now: "+a.x+","+a.y+" Goal: "+b.x+","+b.y);
-      if(!(a.rol.equals("Ball")|| a.rol.equals("controler")))  
+      if(! (a.rol.equals("Ball")|| a.rol.equals("controler")))  
       {
       a.flagmove= true;
       a.move="right";
@@ -71,7 +73,8 @@ public class Out {
     
     // Acá finaliza el recorrido a la pelota    
 //   a.movements.trhowBall(b, a.movements.getNextBaseClose(a),0, null);
-    
+    b.xTemp = 0;
+    b.yTemp = 0;
     }
     
     
@@ -79,9 +82,10 @@ public class Out {
     /**
      @param a it's the agent more close of the ball 
      @param pass it's the key of the recursion if pass == 1 then throw ball with the same position of the ball and agents, else make a recursion with the pass == 0 */
-   public void getBallAndThrow(Agents a,int pass)
+   public synchronized void getBallAndThrow(Agents a,int pass)
    {
-       
+        System.out.println("**** getBallAndThrow ****");    
+   
   //     System.out.println("YA LLEGUE A GET BALL AND THROW");
     int xTemp,yTemp;
     boolean sumarx=false;
@@ -89,8 +93,10 @@ public class Out {
     Agents b = a.getAgent("Ball");
     while(b.xTemp == 0 & b.yTemp == 0){try {
         Thread.sleep(300);
+        System.out.println("GetBallAndThrow 0 y 0");
         } catch (InterruptedException ex) {
             Logger.getLogger(Out.class.getName()).log(Level.SEVERE, null, ex);
+         
         }
 }
     xTemp = b.xTemp + a.r.nextInt(15 - 10) + 10;
@@ -137,8 +143,11 @@ public class Out {
     }
     
     // Acá finaliza el recorrido a la pelota    
-   while(b.goal == false){System.out.println("No goal");
-       
+   while(b.goal == false){
+       try{
+       wait(5);
+       }
+       catch(InterruptedException e){return;}
    }
     CatchBallBeforeField(a);
     int [] obj  = b.movements.getNextBaseClose(a);
@@ -163,7 +172,7 @@ public class Out {
   Thread.sleep(2000);
   }
   catch(Exception e ){ e.printStackTrace();}
-   batter.rol = "wait";
+  batter.rol = "wait";
   batter.movements.toWaitZone(batter);
   }
 }
