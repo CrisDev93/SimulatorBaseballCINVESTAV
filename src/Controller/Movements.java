@@ -120,30 +120,35 @@ public class Movements {
     
     }
     else {
-      
+        
+     synchronized(a){
+     
     // System.out.println("Moving -> "+a.rol);
      /*Condicionales para X */   
     if(a.x == Agents.FIRSTBASEMAN[0]);
     else {
-    if(sumarx) a.x = a.x + up;
-    else a.x --;
+    if(sumarx) {a.x = a.x + up;
+    }
+    else{
+        a.x --;}
     }
     
     /*Condicionales para Y*/
     
    if(a.y == Agents.FIRSTBASEMAN[1]);
    else{
-   if(sumary) a.y++;
-   else a.y --;
+   if(sumary) {a.y++;
    }
+   else {a.y --;
+   }
+   }
+    }
     }
     }
      catch(Exception e){e.printStackTrace();}   
     }
     
 
-    if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
-    a.flagmove = false;  
     }
     
     public void toSecondBase(Agents a)
@@ -363,7 +368,6 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
     if(a.y < tmp[1]) sumary = true;
     while(a.pause == false)
     {
-     System.out.println("La bola esta en "+a.x+","+a.y+" y su objetivo es llegar a "+tmp[0]+","+tmp[1] + " velocidad: "+a.speed);
      try{
      a.sleep(a.speed);
     if(a.x == tmp[0] && a.y == tmp[1]){ a.flagmove = false;
@@ -379,7 +383,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
       } 
     // System.out.println("Moving -> "+a.rol);
      /*Condicionales para X */   
-    if(a.x == tmp[0]){System.out.println("Ya en x ball");}
+    if(a.x == tmp[0]);
     else {
     if(sumarx) a.x++;
     else a.x --;
@@ -403,6 +407,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
  
  public synchronized void toPitcherGo(Agents a,int xm,int ym)
     {
+    a.inMove = true;
     a.pointer = 9;
     int anteriorx=0,anteriory=0;
     int counter = 0;
@@ -441,7 +446,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
   
     else {
          
-     System.out.println("Estoy en "+a.x+","+a.y+" y voy a: "+xm+","+ym);
+ //    System.out.println("Estoy en "+a.x+","+a.y+" y voy a: "+xm+","+ym);
       if(!(a.rol.equals("Ball")|| a.rol.equals("controler")))  
       {
       a.flagmove= true;
@@ -483,7 +488,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
      catch(Exception e){e.printStackTrace();}   
     }
     
-        
+    a.inMove = false;    
     }
  public void toWaitZone(Agents a)
     {
@@ -510,7 +515,7 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
     }
     while(a.pause == false)
     {
-     System.err.println("TO WAIT ZONE" );
+  //   System.err.println("TO WAIT ZONE" );
      try{
      if(a.x > xGo && sumarx) a.x = xGo;
      if(a.x < xGo && sumarx == false) a.x =  xGo;

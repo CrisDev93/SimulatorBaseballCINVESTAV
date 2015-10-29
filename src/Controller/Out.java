@@ -82,7 +82,7 @@ public class Out {
     /**
      @param a it's the agent more close of the ball 
      @param pass it's the key of the recursion if pass == 1 then throw ball with the same position of the ball and agents, else make a recursion with the pass == 0 */
-   public synchronized void getBallAndThrow(Agents a,int pass)
+   public synchronized void getBallAndThrow(Agents a,int pass) throws InterruptedException
    {
         System.out.println("**** getBallAndThrow ****");    
    
@@ -151,10 +151,19 @@ public class Out {
    }
     CatchBallBeforeField(a);
     int [] obj  = b.movements.getNextBaseClose(a);
+   
   //  System.out.println("EL MÁS OPTIMO: "+obj[0]+","+obj[1]+" y FirstBaseman es: "+Agents.FIRSTBASEMAN[0]+","+Agents.FIRSTBASEMAN[1]);
  b.speed = b.speedCalculated(obj);
- b.movements.trhowBall(b,obj, 0, null);
-   
+ b.pause = false;
+ b.speed = 3;
+
+ Movements nm = new Movements();
+ while(b.inMove){
+ wait(5);
+ }
+ b.pause = false;
+ b.flag = true;
+ nm.trhowBall(b,obj, 0, null);
    
    
    
@@ -165,14 +174,12 @@ public class Out {
  
        
    
-  public synchronized void outGameBatter(Agents batter)
+  public  void outGameBatter(Agents batter)
   {
   batter.releaseRol(batter.rol);
-  try{
-  Thread.sleep(2000);
-  }
-  catch(Exception e ){ e.printStackTrace();}
+
   batter.rol = "wait";
-  batter.movements.toWaitZone(batter);
+  Movements nm = new Movements();
+  nm.toWaitZone(batter);
   }
 }

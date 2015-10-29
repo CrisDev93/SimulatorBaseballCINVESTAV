@@ -32,7 +32,7 @@ public class DoingConcert {
       tmpy = a.y;
      //aca se implementan los movimientos cuando esta en un lugar ya establecido
      // a.y = a.y + 5;
-      Thread.sleep(100);
+  
      // a.y = tmpy;
      
         Thread.sleep(100);

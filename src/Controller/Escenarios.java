@@ -17,14 +17,16 @@ import java.util.ArrayList;
  */
 
 
-public class Escenarios extends Movements{
+public class Escenarios {
 
   public  Strike strike = new Strike();
+ 
     /**
     @param a  variable Agents that represent the controler agents and it's for get and Access to the methods of Agents class
     */
     public void contactoPelota(Agents a,boolean isHit)
     {
+    Movements movimientos = new Movements();
     //Some instances of Agents class for get an especific agents access
     Agents pitcher,batter,balon;
     // A boolean variable for generate a randomly movement for the ball for example if rDestinations is true the movement in 'X' will be more long. 
@@ -35,7 +37,7 @@ public class Escenarios extends Movements{
     batter  = a.getAgent("Batter");
     balon    = a.getAgent("Ball");
     balon.pause = false;
-     trhowBall(balon,BATTER,10,null);
+   movimientos.trhowBall(balon,BATTER,10,null);
      
  
      
@@ -63,7 +65,7 @@ public class Escenarios extends Movements{
      else batter.destination = 1;
      balon.pause = false;
      System.out.println("Soy Ball y me voy a las coordenadas: "+balon.xTemp+ ","+balon.yTemp);
-     trhowBall(balon,PITCHER,11,nco);
+     movimientos.trhowBall(balon,PITCHER,11,nco);
      
      
     
@@ -185,9 +187,13 @@ public class Escenarios extends Movements{
   defensivo.initialPosition(2);
   }
   else{
-  System.out.println("VAN: "+count);
+  Thread.sleep(2000);
   defensivo.tipo = "ofensivo";
+  
   defensivo.destination = -3;
+  
+  defensivo.pun = 1;
+  System.out.println("VAN: "+count+" y es "+defensivo.rol);
   }
   }
  

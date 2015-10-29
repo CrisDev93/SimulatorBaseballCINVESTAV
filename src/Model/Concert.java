@@ -20,11 +20,11 @@ int howmany=0;
     public void ListeningConcert(Agents a,int time,int actual)
     {
      
-        howmany++;
+ 
       //  System.out.println("Entraré a escuchar el concierto...");
         new DoingConcert().listenConcert(a, actual,time);
       //  System.out.println("Ya escuché el concierto");
-        howmany--;
+      
         
         }
     
