@@ -23,6 +23,7 @@ public class Escenarios {
  
     /**
     @param a  variable Agents that represent the controler agents and it's for get and Access to the methods of Agents class
+     * @param isHit
     */
     public void contactoPelota(Agents a,boolean isHit)
     {
@@ -37,14 +38,17 @@ public class Escenarios {
     batter  = a.getAgent("Batter");
     balon    = a.getAgent("Ball");
     balon.pause = false;
-   movimientos.trhowBall(balon,BATTER,10,null);
-     
- 
-     
+    balon.initialPosition(1);
+   movimientos.toAnyPlace(balon,BATTER);
+   if(isHit){
+     ry = a.r.nextInt(150 - 100 ) + 100;
+     rx = a.r.nextInt(40 - 10 )+ 10;
+   }
+   else{
      ry = a.r.nextInt(100 - 70 ) + 70;
      rx = a.r.nextInt(40 - 10 )+ 10;
-     
-     rDestionation = a.r.nextBoolean();
+   }
+    rDestionation = a.r.nextBoolean();
      
     // System.out.println(rDestionation);
      int [] nco;
@@ -60,8 +64,8 @@ public class Escenarios {
      balon.xTemp = nco[0];
      balon.yTemp = nco[1];
    //  System.out.println("BALLL COORDS TMP "+balon.xTemp+","+balon.yTemp);
-     
-     if(isHit)batter.destination = 2;
+     Agents som = batter.getAgent("wait");
+     if(isHit)som.destination = 2;
      else batter.destination = 1;
      balon.pause = false;
      System.out.println("Soy Ball y me voy a las coordenadas: "+balon.xTemp+ ","+balon.yTemp);
@@ -118,7 +122,7 @@ public class Escenarios {
   if(agente.rol.equals("Ball") || agente.rol.equals("controler"));
   else {
   if(agente.tipo.equals("ofensivo")) ofensivos.add(agente);
-  else {
+  else { 
   defensivos.add(agente);
   }
   }
@@ -182,21 +186,41 @@ public class Escenarios {
   {
   defensivo.tipo = "ofensivo";
   defensivo.rol = "Batter";
-  defensivo.number  = Agents.currentnumber + 1;
-  Agents.currentnumber++;
+  Agents.currentnumber = Integer.parseInt(defensivo.rules.nextRule().player);
+  defensivo.number  = Agents.currentnumber;
+  
+  
   defensivo.initialPosition(2);
   }
   else{
-  Thread.sleep(2000);
+
   defensivo.tipo = "ofensivo";
-  
+  defensivo.rol = "wait";
   defensivo.destination = -3;
   
   defensivo.pun = 1;
   System.out.println("VAN: "+count+" y es "+defensivo.rol);
   }
   }
- 
+   for(int i = 0; i<Agents.rols.length;i++)
+   {
+       Agents.rols[i] = "";
+   }
+   for(Agents p: a.players)
+   {
+   if(p.rol.equals("Ball") || p.rol.equals("controler"));
+   else {
+   if(p.tipo.equals("ofensivo"))
+   {
+  // System.out.println("OFENSIVO - > " + p.rol + " team: "+ p.team);
+   }
+   else {
+    
+  // System.out.println("DEFENSIVO - > " + p.rol + " team "+ p.team);
+   
+   }
+   }
+   }
       }
       catch(Exception e){e.printStackTrace();}
 

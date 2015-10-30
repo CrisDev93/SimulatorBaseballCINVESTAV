@@ -42,8 +42,8 @@ public class Agents extends Thread {
     public boolean pause,flag = false,alive,permitActivity,flagmove = false,turn = false,evento = false,inMovement = false,ballflag = false,goal=false,inMove = false;
     public static boolean nextStack=false;
     public static boolean keyball = false;
-    public static int[] PITCHER = {523,475},CATCHER={515,545},BATTER={515,525},FIRSTBASEMAN={640,460},SECONDBASEMAN={527,400},
-            THIRDBASEMAN={403,465},SHORTSTOP,LEFTFIELDER={351,334},CENTERFIELDER={515,313},RIGHTFIELDER={687,323};
+    public static int[] PITCHER = {523,475},CATCHER={515,545},BATTER={515,525},FIRSTBASEMAN={640,460},FIRSTBASEMANP={600,443},SECONDBASEMAN={527,400},SECONDBASEMANP={475,417},
+            THIRDBASEMAN={403,465},THIRDBASEMANP={420,485},SHORTSTOP,LEFTFIELDER={351,334},CENTERFIELDER={515,313},RIGHTFIELDER={687,323};
     public static Agents bases [] = new Agents[4]; 
     //Objetos
     public static ArrayList<Agents> players = new ArrayList<Agents>();
@@ -351,36 +351,7 @@ for (int i = 0; i < rows; i++)
     return null;
     }
     }
-    public  void communicationC(String file){
-          try {
-           
-          
-                 FileInputStream fstream = new FileInputStream(System.getProperty("user.dir") + "\\procesos\\"+file+".txt");
-            DataInputStream in = new DataInputStream(fstream);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-                
-                
-              String strLine = br.readLine();
-                 
-     
-               StringTokenizer st = new StringTokenizer(strLine);
-              
-               String sFlag=st.nextToken();
-               
-              
-          //      System.out.println(name+" "+alive);
-             br.close();
-                    Thread.sleep(100);
-            
-         
-        } catch (IOException ex) {
-            System.err.println("Error: " + ex.getMessage());
-        } catch (InterruptedException ex) {
-            System.err.println("Error: " + ex.getMessage());
-        }
-        
-    }
-
+    
     public void initialPosition(int location) {
        // System.out.println("ASGINADOOOOOOOOOOOOO "+rol);
           if(location == 1)  {this.x = PITCHER[0]; this.y = PITCHER[1];}
@@ -390,9 +361,9 @@ for (int i = 0; i < rows; i++)
           System.out.println("Se pone en posicion y tiene esprite : "+this.sprites);
           }
           if(location == 3 ) {this.x = CATCHER[0]; this.y = CATCHER[1];}
-          if(location == 4)   {this.x = FIRSTBASEMAN[0];  this.y=FIRSTBASEMAN[1];}
-          if(location == 5)   {this.x = SECONDBASEMAN[0];  this.y=SECONDBASEMAN[1];}
-          if(location == 6)   {this.x= THIRDBASEMAN[0]; this.y = THIRDBASEMAN[1];}
+          if(location == 4)   {this.x = FIRSTBASEMANP[0];  this.y=FIRSTBASEMANP[1];}
+          if(location == 5)   {this.x = SECONDBASEMANP[0];  this.y=SECONDBASEMANP[1];}
+          if(location == 6)   {this.x= THIRDBASEMANP[0]; this.y = THIRDBASEMANP[1];}
           if(location == 7)   {this.x= LEFTFIELDER[0]; this.y = LEFTFIELDER[1];}
           if(location == 8)   {this.x= CENTERFIELDER[0]; this.y = CENTERFIELDER[1];} 
           if(location == 9)   {this.x= RIGHTFIELDER[0]; this.y =  RIGHTFIELDER[1];}
@@ -428,12 +399,12 @@ tmp = tmp + ru.charAt(i);
 
  public void singnals() throws InterruptedException
  {
-   if(pun == 1)  System.err.println("Entro a signals y soy "+rol);
+ 
 
  if(this.destination == 1)
  {
    flag = true; 
-  this.speed = 5;
+
    this.movements.toFirstBase(this);
    destination = 0;
    
@@ -455,8 +426,8 @@ this.speed = 40;
  {
  if(r.nextBoolean()){
  System.out.println(rol + "CatchBallBeforeField");
-ot.getBallAndThrow(this, 1);
-//ot.CatchBallBeforeField(this);
+
+ot.CatchBallBeforeField(this);
 destination = 0;
 
  }
@@ -469,9 +440,9 @@ destination = 0;
  }
  }
  Agents runner = this.getAgent("Batter");
-if(this.rol.equals("First Baseman")) nm.toFirstBase(this);
-if(this.rol.equals("Second Baseman")) nm.toSecondBase(this);
-if(this.rol.equals("Third Baseman")) nm.toThirdBase(this);
+if(this.rol.equals("First Baseman")) nm.toAnyPlace(this,FIRSTBASEMANP);
+if(this.rol.equals("Second Baseman")) nm.toAnyPlace(this,SECONDBASEMANP);
+if(this.rol.equals("Third Baseman")) nm.toAnyPlace(this,THIRDBASEMANP);
 System.out.println("ANTES DE OUTGAMERBATTER");
 runner.out.outGameBatter(runner);
 System.out.println("DESPUES DE OUTGAMEBATTER");
@@ -484,10 +455,9 @@ destination = 0;
 }
  if(destination == -5)
  {
-  Movements nm = new Movements();
+ Movements nm = new Movements();
  Agents tmpA = nm.getBestAgent(this.getAgent("Ball"));
- tmpA.speed = this.getAgent("Batter").speed;
-
+ tmpA.speed = getAgent("Batter").speed;
  tmpA.destination = -4;
  destination = 0;
  }
@@ -495,7 +465,7 @@ destination = 0;
  {
  // System.out.println("YES -2");
  Agents tmpA = this.movements.getBestAgent(this.getAgent("Ball"));
- tmpA.speed = this.getAgent("Batter").speed / 2;
+ tmpA.speed = 15;
  tmpA.pause = false;
  tmpA.destination = -1;
  this.destination = 0;
@@ -508,9 +478,9 @@ System.out.println("Acaba de entrar un nuevo -3");
   this.speed = 25;
  Thread.sleep(r.nextInt(3000 - 1000) + 1000);
  Out no = new Out();
- System.out.println("Antes de que se vaya");
+// System.out.println("Antes de que se vaya");
  no.outGameBatter(this);
- System.out.println("Despues que se fue");
+// System.out.println("Despues que se fue");
 
   synchronized(changeLock)
   {
@@ -519,11 +489,7 @@ System.out.println("Acaba de entrar un nuevo -3");
  System.err.println("CONTADOR PARA LOCK WAIT "+changeLock);
   
  this.destination = 0;
- if(changeLock == 8) {
-       for(int i = 0; i<Agents.rols.length;i++)
-   {
-       Agents.rols[i] = "";
-   }
+ if(changeLock == 6) {
      waitLock = 0;
      nextStack = false;
      changeLock = 0;
@@ -562,11 +528,7 @@ System.out.println("Nuevo Rol Cachado" + nr);
  catch(Exception e){e.printStackTrace();}
  }
 public void moveAgents(int destinationl,int cont) throws InterruptedException {
-    if(pun == 1)
-    {
-    System.out.println("SI ANDO ACA NAMAS ME ANDO HACIENDO PENDEJO "+ rol);
-    pun =0;
-    }
+   
    
     singnals();
     if(this.rol.equals("wait"))
@@ -591,8 +553,10 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
        this.sleep(3000);
         nextStack = true;
         Rule nr = this.rules.getRule();
+        
         if(nr != null)
         {
+        System.out.println("Nuevo rol: "+nr.escenario);    
         if(nr.escenario.equals("b"))
         { 
         
@@ -603,28 +567,46 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
         }
         if(nr.escenario.equals("co"))
         {
+            boolean isHit = false;
+            
             // QUEDE ACA EN ELEGIR AL MEJOR AGENTE EN BASE A LAS COORDENADAS TEMPORALES DEL BALON
            
          if(rules.nextRule().escenario.equals("o"))
          {
         
-       
          Agents tmpb = this.getAgent("wait");
          rules.getRule();
          
          tmpb.destination = -2;
-         
+         Agents bt = getAgent("Batter");
+         bt.speed = 30;
+   
+        
+        Agents ball =  getAgent("Ball");
+        ball.speed = 7;
+        ball.pause = false;
         // tmpb.speed = 40;
          }
-         else {nextStack = false;
-          System.out.println("NO CAYO EN OUT");
+         else{
+          if(rules.nextRule().escenario.equals("hi"))
+          {
+          isHit = true;
+         Agents bt = getAgent("Batter");
+         bt.speed = 10;
+   
+         Agents ball =  getAgent("Ball");
+         ball.speed = 15;
+         ball.pause = false;   
+              
+          Agents atmp = this.getAgent("wait");
+          rules.getRule();
+          atmp.destination = 2;
+          nextStack = false;   
+          }
+          else nextStack = false;
          }
-        Agents bt = getAgent("Batter");
-        bt.speed = bt.r.nextInt(70 - 30) + 30;
-        Agents ball =  getAgent("Ball");
-        ball.speed = bt.speed / 6;
-        ball.pause = false;
-        escenarios.contactoPelota(this,false);
+       
+        escenarios.contactoPelota(this,isHit);
         }
         
         // Si el guion marca un Strike ...
@@ -651,25 +633,11 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
         escenarios.changeOfTeam(this);
         
         }
-        if(nr.escenario.equals("hi"))
-        {
-        Agents ball = this.getAgent("Ball");
-        Agents runner = this.getAgent("Batter");
-        runner.speed = 20;
-        ball.speed = runner.speed;
-        
-         Agents tmpb = this.getAgent("wait");
-         tmpb.destination = -5;
-         escenarios.contactoPelota(this,true);
-        
-        }
+       
         }
     
     }
-     
-    
-    
-    
+ 
     }
 
 public void changeBases()
@@ -679,25 +647,28 @@ Agents batter = this.getAgent("Batter");
 Stack<Rule> rulesord = new Stack<Rule>();       
         // Ordeno los movimientos que se van a realizar
         while(rules.nextRule().escenario.equals("a"))rulesord.push(rules.getRule());
+        
+        System.out.println("CAMBIOS " + rulesord);
         //Itero todos los movimientos que se van a realizar y muevo al agente que se requiere en ese momento
         Iterator it = rulesord.iterator();
         while(it.hasNext())
         {
         Rule rc = rulesord.pop();
         Agents agent = findForNumber(Integer.parseInt(rc.player));
+        System.out.println("Agente para cambio " + agent.rol + " BASE " + rc.base);
         if(rc.base == 1)
         {
-        agent.movements.toFirstBase(agent);
+        agent.movements.toAnyPlace(agent,FIRSTBASEMAN);
         agent.releaseRol(agent.rol);
         agent.rol = "IF";
         }
         if(rc.base == 2)
         {
-        agent.movements.toSecondBase(agent);
+        agent.movements.toAnyPlace(agent,SECONDBASEMAN);
         }
         if(rc.base == 3)
         {
-        agent.movements.toThirdBase(agent);
+        agent.movements.toAnyPlace(agent,THIRDBASEMAN);
         }
         if(rc.base == 4)
         {

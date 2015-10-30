@@ -138,12 +138,12 @@ public class Drawn extends JPanel implements ActionListener {
     private class teclado extends KeyAdapter {
 
         public synchronized void keyReleased(KeyEvent e) {
-            Player_1.keyReleased(e);
+          
 
         }
 
         public synchronized void keyPressed(KeyEvent e) {
-            Player_1.keyPressed(e);
+           
 
         }
     }

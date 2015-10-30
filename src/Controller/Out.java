@@ -28,56 +28,10 @@ public class Out {
     Agents b = a.getAgent("Ball");
     Agents batter = a.getAgent("Batter");
     b.sinalRule = 1;
-    if(a.x < b.xTemp) sumarx = true;
-    if(a.y < b.yTemp) sumary = true;
+    int location [] = {b.xTemp,b.yTemp};
+    a.movements.toAnyPlace(a, location);
     
-    while(flag)
-    {
-     try{
-    //     System.out.println("gonna for "+b.xTemp+","+b.yTemp);
-
-     Thread.sleep(a.speed);
-    if(a.x == b.xTemp && a.y == b.yTemp){
-        a.flagmove = false;
-  //  System.out.println("DONE !");
-  batter.pause = true;
-    break;
     }
-    else {
-  //  System.out.println("Now: "+a.x+","+a.y+" Goal: "+b.x+","+b.y);
-      if(! (a.rol.equals("Ball")|| a.rol.equals("controler")))  
-      {
-      a.flagmove= true;
-      a.move="right";
-      a.pointer = 9;
-      } 
-   //  System.out.println("Moving -> "+a.rol);
-     /*Condicionales para X */   
-    if(a.x == b.xTemp);
-    else {
-    if(sumarx) a.x++;
-    else a.x --;
-    }
-    
-    /*Condicionales para Y*/
-    
-   if(a.y == b.yTemp);
-   else{
-   if(sumary) a.y++;
-   else a.y --;
-   }
-    }
-    }
-     catch(Exception e){ e.printStackTrace(); }   
-    }
-    
-    // Acá finaliza el recorrido a la pelota    
-//   a.movements.trhowBall(b, a.movements.getNextBaseClose(a),0, null);
-    b.xTemp = 0;
-    b.yTemp = 0;
-    }
-    
-    
     
     /**
      @param a it's the agent more close of the ball 
@@ -101,48 +55,8 @@ public class Out {
 }
     xTemp = b.xTemp + a.r.nextInt(15 - 10) + 10;
     yTemp = b.yTemp + a.r.nextInt(15 - 10) + 10;
-    if(a.x < xTemp) sumarx = true;
-    if(a.y < yTemp) sumary = true;
-    
-    while(flag)
-    {
-     try{
-   // System.out.println("gonna for "+xTemp+","+yTemp);
-     Thread.sleep(a.speed);
-    if(a.x == xTemp && a.y == yTemp){ a.flagmove = false;
-   // System.out.println("DONE BEST AGENT GOAL !");
-    flag = false;
-    break;
-    }
-    else {
-  //  System.out.println("Now: "+a.x+","+a.y+" Goal: "+b.x+","+b.y);
-      if(!(a.rol.equals("Ball")|| a.rol.equals("controler")))  
-      {
-      a.flagmove= true;
-      a.move="right";
-      
-      } 
-   //  System.out.println("Moving -> "+a.rol);
-     /*Condicionales para X */   
-    if(a.x == xTemp);
-    else {
-    if(sumarx) a.x++;
-    else a.x --;
-    }
-    
-    /*Condicionales para Y*/
-    
-   if(a.y == yTemp);
-   else{
-   if(sumary) a.y++;
-   else a.y --;
-   }
-    }
-    }
-     catch(Exception e){ e.printStackTrace(); }   
-    }
-    
-    // Acá finaliza el recorrido a la pelota    
+    int location [] = {xTemp,yTemp};
+    a.movements.toAnyPlace(a,location);
    while(b.goal == false){
        try{
        wait(5);
@@ -163,10 +77,8 @@ public class Out {
  }
  b.pause = false;
  b.flag = true;
- nm.trhowBall(b,obj, 0, null);
-   
-   
-   
+ nm.toAnyPlace(b,obj);
+
    }
    
    

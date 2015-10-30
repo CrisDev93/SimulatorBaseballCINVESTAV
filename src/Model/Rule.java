@@ -17,9 +17,16 @@ public class Rule {
     
     public Rule(String p,String es,int base)
     {
-    this.player = p;
-    this.escenario = es; 
-    this.base = base;
+    
+    this.player = Integer.toString(base);
+    this.escenario = es;  
+    try{
+    this.base = Integer.parseInt(p);
+    }
+    catch(NumberFormatException e)
+    {
+    this.base = 0;
+    }
     }
     
     public String getPlayer()

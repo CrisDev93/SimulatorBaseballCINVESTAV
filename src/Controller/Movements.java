@@ -80,6 +80,76 @@ public class Movements {
   if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
 
     }
+    public void toAnyPlace(Agents a,int place []){
+     boolean sumarx=false;
+    boolean sumary=false;
+    
+    int up;
+    if(a.rol.equals("Ball") ) up = 1;
+    else  up = 2;
+   // System.out.println("to first");
+
+    if(a.x < place[0]) sumarx = true;
+    if(a.y < place[1]) sumary = true;
+    if(!a.rol.equals("Ball"))
+    {
+     String [] sm = this.getTypeOfMove(a,place[0],place[1]);
+     a.move = sm[0];
+     a.pointer = Integer.parseInt(sm[1]);
+     a.flagmove = true;
+   //  System.out.println("*******  "+sm[0]+" **************");
+        
+    }
+    while(a.pause == false)
+    {
+//    System.err.println(a.pause + " TO F " + a.rol);
+     try{
+     if(a.x > place[0] && sumarx) a.x = place[0];
+     if(a.x < place[0] && sumarx == false) a.x = place[0];
+     if(a.y > place[1] && sumary) a.y = place[1];
+     if(a.y < place[1] && sumary == false) a.y = place[1];
+     Thread.sleep(a.speed);
+//    System.out.println(a.rol + " A "+ a.speed + "ms de velocidad");
+    if(a.x == place[0] && a.y == place[1]){ 
+        if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = true;
+        a.flagmove = false; 
+        a.pointer = 0;
+        break;
+    
+    }
+    else {
+        
+     synchronized(a){
+     
+    // System.out.println("Moving -> "+a.rol);
+     /*Condicionales para X */   
+    if(a.x == place[0]);
+    else {
+    if(sumarx) {a.x = a.x + up;
+    }
+    else{
+        a.x --;}
+    }
+    
+    /*Condicionales para Y*/
+    
+   if(a.y == place[1]);
+   else{
+   if(sumary) {a.y++;
+   }
+   else {a.y --;
+   }
+   }
+    }
+    }
+    }
+     catch(Exception e){e.printStackTrace();}   
+    }
+    
+
+    }
+    
+    
     
     public synchronized void toFirstBase(Agents a)
     {
