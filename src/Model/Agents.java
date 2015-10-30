@@ -408,7 +408,6 @@ tmp = tmp + ru.charAt(i);
    this.movements.toFirstBase(this);
    destination = 0;
    
-   
  }
  if(this.destination == 2)
  {
@@ -624,14 +623,33 @@ public void moveAgents(int destinationl,int cont) throws InterruptedException {
         }
         if(nr.escenario.equals("p"))
         {
-        Agents batter = this.getAgent("Batter");
-        out.outGameBatter(batter);
+        Agents batter =getAgent("Batter");
+        Out no = new Out();
+        no.outGameBatter(batter);
         nextStack = false;
         }
         if(nr.escenario.equals("ce"))
         {
         escenarios.changeOfTeam(this);
         
+        }
+        if(nr.escenario.equals("d"))
+        {
+         
+         Agents bt = getAgent("Batter");
+         bt.speed = 10;
+   
+         Agents ball =  getAgent("Ball");
+         ball.speed = 15;
+         ball.pause = false;   
+              
+          Agents atmp = this.getAgent("wait");
+          rules.getRule();
+          atmp.destination = 2;
+          
+         escenarios.contactoPelota(this,true);
+         nextStack = false;   
+         
         }
        
         }
@@ -688,8 +706,7 @@ return null;
         switch (current) {
            
             case 4: {
-                
-                
+           
                 this.moveAgents(destiny,cont);
                 break;
             }

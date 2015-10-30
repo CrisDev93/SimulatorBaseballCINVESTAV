@@ -26,7 +26,7 @@ public class Out {
     boolean sumarx=false;
     boolean sumary=false;
     Agents b = a.getAgent("Ball");
-    Agents batter = a.getAgent("Batter");
+   
     b.sinalRule = 1;
     int location [] = {b.xTemp,b.yTemp};
     a.movements.toAnyPlace(a, location);

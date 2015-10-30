@@ -80,10 +80,18 @@ public class Movements {
   if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
 
     }
-    public void toAnyPlace(Agents a,int place []){
+    public synchronized void toAnyPlace(Agents a,int place []){
      boolean sumarx=false;
     boolean sumary=false;
-    
+    a.pause = false;
+    if(a.rol.equals("Ball") || a.rol.equals("controler"));
+    else {
+    String [] dm = a.movements.getTypeOfMove(a,place[0],place[1]);
+    System.out.println("TO : "+ dm [0] + " TO " + dm[1]);
+    a.makeSprits();
+    a.move = dm[0];
+    a.pointer = Integer.parseInt(dm[1]);
+    }
     int up;
     if(a.rol.equals("Ball") ) up = 1;
     else  up = 2;
@@ -146,7 +154,7 @@ public class Movements {
      catch(Exception e){e.printStackTrace();}   
     }
     
-
+a.flagmove = false;
     }
     
     
@@ -565,13 +573,16 @@ if(a.rol.equals("Ball") && a.sinalRule == 1) a.getAgent("Batter").pause = false;
     a.pause = false;
     boolean sumarx=false;
     boolean sumary=false;
-    
+   
     int up;
     
   //  System.out.println("to first");
     int xGo,yGo;
     yGo = a.r.nextInt(219 - 163 ) + 163;
     xGo = a.r.nextInt(1057 - 873) + 873;
+  String m [] =  a.movements.getTypeOfMove(a, xGo, yGo);
+   a.move = m[0];
+   a.pointer = Integer.parseInt(m[1]);
     if(a.x < xGo) sumarx = true;
     if(a.y < yGo) sumary = true;
      if(!a.rol.equals("Ball"))

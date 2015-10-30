@@ -72,7 +72,6 @@ public class Escenarios {
      movimientos.trhowBall(balon,PITCHER,11,nco);
      
      
-    
     }
     public void bola(Agents a)
     {
@@ -109,7 +108,6 @@ public class Escenarios {
     
   public void changeOfTeam(Agents a)  
   {
-      //
       try{
   ArrayList<Agents> ofensivos = new ArrayList<Agents>();   
   ArrayList<Agents> defensivos = new ArrayList<Agents>();   
@@ -129,7 +127,53 @@ public class Escenarios {
   
   }
   //ofensiva == batter
-  int contador = 0;
+  
+  drawAgents(ofensivos);
+  
+   for(int i = 0; i<Agents.rols.length;i++)
+   {
+       Agents.rols[i] = "";
+   }
+   int count = 0;
+  for(Agents defensivo: defensivos) {
+  count++;
+  if(count == 1)
+  {
+  defensivo.tipo = "ofensivo";
+  defensivo.rol = "Batter";
+  Agents.currentnumber = Integer.parseInt(defensivo.rules.nextRule().player);
+  defensivo.number  = Agents.currentnumber;
+  
+  
+  defensivo.initialPosition(2);
+  }
+  else{
+
+  defensivo.tipo = "ofensivo";
+  defensivo.rol = "wait";
+  defensivo.destination = -3;
+  
+  defensivo.pun = 1;
+  System.out.println("VAN: "+count+" y es "+defensivo.rol);
+  }
+  }
+   for(int i = 0; i<Agents.rols.length;i++)
+   {
+       Agents.rols[i] = "";
+   }
+   
+   
+   drawAgents(ofensivos);
+      }
+      catch(Exception e){e.printStackTrace();}
+
+  }
+  
+  
+ 
+  public void drawAgents(ArrayList<Agents> ofensivos)
+  {
+    int contador = 0;
   for(Agents ofensivo: ofensivos) {
       contador ++;
   ofensivo.tipo = "defensivo";
@@ -175,57 +219,8 @@ public class Escenarios {
   
   }
   }
-   for(int i = 0; i<Agents.rols.length;i++)
-   {
-       Agents.rols[i] = "";
-   }
-   int count = 0;
-  for(Agents defensivo: defensivos) {
-  count++;
-  if(count == 1)
-  {
-  defensivo.tipo = "ofensivo";
-  defensivo.rol = "Batter";
-  Agents.currentnumber = Integer.parseInt(defensivo.rules.nextRule().player);
-  defensivo.number  = Agents.currentnumber;
   
-  
-  defensivo.initialPosition(2);
-  }
-  else{
-
-  defensivo.tipo = "ofensivo";
-  defensivo.rol = "wait";
-  defensivo.destination = -3;
-  
-  defensivo.pun = 1;
-  System.out.println("VAN: "+count+" y es "+defensivo.rol);
-  }
-  }
-   for(int i = 0; i<Agents.rols.length;i++)
-   {
-       Agents.rols[i] = "";
-   }
-   for(Agents p: a.players)
-   {
-   if(p.rol.equals("Ball") || p.rol.equals("controler"));
-   else {
-   if(p.tipo.equals("ofensivo"))
-   {
-  // System.out.println("OFENSIVO - > " + p.rol + " team: "+ p.team);
-   }
-   else {
-    
-  // System.out.println("DEFENSIVO - > " + p.rol + " team "+ p.team);
-   
-   }
-   }
-   }
-      }
-      catch(Exception e){e.printStackTrace();}
-
   }
   
   
- 
 }
